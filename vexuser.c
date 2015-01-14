@@ -248,7 +248,7 @@ void setMotors(void)
 }
 
 /*
- * This function drives forward a certain distance autonomously.
+ * This function powers a motor for a certain distance autonomously.
  */
 void setAutonMotor(int motor, int dist, int speed)
  {
