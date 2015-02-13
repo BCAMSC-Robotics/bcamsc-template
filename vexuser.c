@@ -142,6 +142,26 @@ int baseDistances[] = {0,0,0,0};
 float baseSpeeds[] = {0,0,0,0};
 float baseSpeedCap = 30;
 const float straighteningAdjustment = 1.05;
+
+const unsigned int STRAIGHTENED_VALUES[128] = 
+{
+     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 
+    21, 21, 22, 22, 22, 23, 24, 24, 25, 
+    25, 25, 25, 26, 27, 27, 28, 28, 28, 
+    28, 29, 30, 30, 30, 31, 31, 
+    32, 32, 32, 33, 33, 34, 34, 35, 
+    35, 35, 36, 36, 37, 37, 37, 37, 38, 38,
+    39, 39, 39, 40, 40, 41, 41, 42, 42,
+    43, 44, 44, 45, 45, 46, 46, 47, 47,
+    48, 48, 49, 50, 50, 51, 52, 52, 53,
+    54, 55, 56, 57, 57, 58, 59, 60, 61,
+    62, 63, 64, 65, 66, 67, 67, 68, 70,
+    71, 72, 72, 73, 74, 76, 77, 78, 79,
+    79, 80, 81, 83, 84, 84, 86, 86, 87,
+    87, 88, 88, 89, 89, 90, 127, 127,
+    127, 127
+};
+
 /**
  * @brief User setup
  * @details
@@ -253,6 +273,11 @@ int getPowerIncrement(int oldValue, int input, int deadZone, int maxAcceleration
         verticalCoefficient = horizontalCoefficient = spinCoefficient = liftCoefficient = 1;
     }
     return -oldValue;
+
+    //Adjusts the motor values to be proportional to the acceleration of the joystick
+    vertical = joystickAcceleration(vexControllerGet(Ch3));
+    horizontal = joystickAcceleration(vexControllerGet(Ch4));
+    spin = joystickAcceleration(vexControllerGet(Ch1));
     //Test Auton Functions
     if(vexControllerGet(Btn7R)) auton3();
     if(vexControllerGet(Btn7L)) auton4();
@@ -274,6 +299,17 @@ int getPowerIncrement(int oldValue, int input, int deadZone, int maxAcceleration
     //liftSpeed += getPowerIncrement(liftSpeed,vexControllerGet(Ch2),deadZone,liftSpeed - vexControllerGet(Ch2));
 
     if(vexControllerGet(Ch2) > deadZone || vexControllerGet(Ch2) < -deadZone)
+int joystickAcceleration(int input)
+{
+    //Determines the direction of the joystick
+    int direction = signOf(input);
+
+    //Calculates the index of the STRAIGHTENED_VALUES array for the given input
+    int index = abs(input);
+    if(index > 127) index = 127;
+
+    return STRAIGHTENED_VALUES[index] * direction;
+}
     {
         liftSpeed = vexControllerGet(Ch2);
     }
