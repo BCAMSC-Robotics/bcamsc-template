@@ -144,7 +144,7 @@ int signOf(int x);
 void setBaseMotors(int spin, int vertical, int horizontal);
 void setLiftMotors(int liftSpeed);
 void setShuttleMotors(bool in, bool out, bool back, bool front);
-bool setClawMotors(bool buttonPressed, bool buttonPressedPrevious, bool clawIsOpen);
+void setClawMotors(bool buttonPressed);
 
 int joystickAcceleration(int input);
 

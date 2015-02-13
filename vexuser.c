@@ -216,14 +216,11 @@ msg_t vexOperator(void *arg)
     vexTaskRegister("operator");
 
     //Driver Control Variables
-    bool clawIsOpen = true;
 
     bool shuttleIn = false;
     bool shuttleOut = false;
     bool shuttleReachedBack = false;
     bool shuttleReachedFront = false;
-
-    bool clawToggle = false;
 
     // Run until asked to terminate
     while(!chThdShouldTerminate())
@@ -244,8 +241,7 @@ msg_t vexOperator(void *arg)
         setShuttleMotors(shuttleIn, shuttleOut, shuttleReachedBack, shuttleReachedFront);
 
         //Claw
-        clawToggle = vexControllerGet(Btn6U);
-        clawIsOpen = setClawMotors(clawToggle, clawTogglePrevious, clawIsOpen);
+        setClawMotors(vexControllerGet(Btn6U));
 
         //Don't hog cpu
         vexSleep(25);
@@ -380,23 +376,16 @@ void setShuttleMotors(bool in, bool out, bool back, bool front)
 /*
  * Set the claw motors
  */
-bool setClawMotors(bool buttonPressed, bool buttonPressedPrevious, bool clawIsOpen)
+void setClawMotors(bool buttonPressed)
 {
-    if(buttonPressed && !buttonPressedPrevious)
+    if(buttonPressed)
     {
-        if(clawIsOpen) vexMotorSet(CLAW, 118);
-        else vexMotorSet(CLAW, -118);
-
-        clawIsOpen = !clawIsOpen;
+        vexMotorSet(CLAW, 127);
     }
-    // else
-    // {
-    //     if(clawIsOpen) vexMotorSet(CLAW, -118);
-    //     else vexMotorSet(CLAW, 118);
-    // }
-    // buttonPressedPrevious = buttonPressed
-    clawTogglePrevious = buttonPressed;
-    return clawIsOpen;
+    else
+    {
+        vexMotorSet(CLAW, -127);
+    }
 }
 
 /*
@@ -644,7 +633,7 @@ float averageProportionComplete(int index)
     {
         if(i != index)
         {
-            vexMotorSet(motor,0);
+            vexMotorSet(motorPorts[i],0);
             if(baseDistances[i])
             {
                 average += abs(vexMotorPositionGet(motorPorts[i]) / baseDistances[i]);
