@@ -212,72 +212,91 @@ msg_t vexAutonomous( void *arg )
  * @brief Driver Control
  *
  * @details
- *  This thread is started when the driver control period is started
+ * This thread is started when the driver control period is started
  */
-msg_t vexOperator( void *arg )
+msg_t vexOperator(void *arg)
 {
-	(void)arg;
+    (void)arg;
 
-	// Must call this
-	vexTaskRegister("operator");
+    // Must call this
+    vexTaskRegister("operator");
 
-	// Run until asked to terminate
-	while(!chThdShouldTerminate())
-	{
+    //Driver Control Variables
+    bool clawIsOpen = true;
 
+    bool shuttleIn = false;
+    bool shuttleOut = false;
+    bool shuttleReachedBack = false;
+    bool shuttleReachedFront = false;
+
+    bool clawToggle = false;
+
+    // Run until asked to terminate
+    while(!chThdShouldTerminate())
+    {
+        //Takes in input from the controller and sets motors
         updateInput();
-        setMotors();
+        
+        //Sets the motors based on user input
+        setBaseMotors(spin, vertical, horizontal);
+        setLiftMotors(liftSpeed);
 
-        //Temporary Shuttle Code
-        if(vexControllerGet(Btn6U))
-        {
-            vexMotorSet(SHUTTLE,shuttleSpeed);
-        }
-        else if(vexControllerGet(Btn6D))
-        {
-            vexMotorSet(SHUTTLE,-shuttleSpeed);
-        }
-        else
-        {
-            vexMotorSet(SHUTTLE,0);
-        }
+        //Shuttle
+        shuttleIn = vexControllerGet(Btn5D);
+        shuttleOut = vexControllerGet(Btn5U);
+        shuttleReachedBack = vexDigitalPinGet(BACK_BUTTON);
+        shuttleReachedFront = vexDigitalPinGet(FRONT_BUTTON);
 
-		// Don't hog cpu
-		vexSleep( 25 );
-	}
+        setShuttleMotors(shuttleIn, shuttleOut, shuttleReachedBack, shuttleReachedFront);
 
-	return (msg_t)0;
+        //Claw
+        clawToggle = vexControllerGet(Btn6U);
+        clawIsOpen = setClawMotors(clawToggle, clawTogglePrevious, clawIsOpen);
+
+        //Don't hog cpu
+        vexSleep(25);
+    }
+
+    return (msg_t)0;
 }
 
 /*
- * This function determines and returns an acceptable increment to the given 
- *     power level based on user input.
+ * This function converts driver input and modifies values for use.
  */
-int getPowerIncrement(int oldValue, int input, int deadZone, int maxAcceleration)
+void updateInput(void)
 {
-    if(input > deadZone || input < -deadZone)
+    //TODO: CHANGE getPowerIncrement to handle input and oldValue as values from the table
+    //      MAKE sure to get oldValues
+
+    //Joystick values adjusted to create a dead zone
+    jSCh1 = deadZoneAdjust(vexControllerGet(Ch1));
+    jSCh2 = deadZoneAdjust(vexControllerGet(Ch2));
+    jSCh3 = deadZoneAdjust(vexControllerGet(Ch3));
+    jSCh4 = deadZoneAdjust(vexControllerGet(Ch4));
+
+    //Sets precision coefficients based on user input
+    if(vexControllerGet(Btn6D))
     {
-        if(input > oldValue + maxAcceleration) 
-        {
-            return maxAcceleration;
-        }
-        else if(input < oldValue - maxAcceleration) 
-        {
-            return -maxAcceleration;
-        }
-        return input;
         verticalCoefficient = horizontalCoefficient = spinCoefficient = liftCoefficient = precisionConstant;
     }
     else
     {
         verticalCoefficient = horizontalCoefficient = spinCoefficient = liftCoefficient = 1;
     }
-    return -oldValue;
 
     //Adjusts the motor values to be proportional to the acceleration of the joystick
     vertical = joystickAcceleration(vexControllerGet(Ch3));
     horizontal = joystickAcceleration(vexControllerGet(Ch4));
     spin = joystickAcceleration(vexControllerGet(Ch1));
+/*
+    //Adjust movement input and maximum acceleration 
+    vertical += getPowerIncrement(vertical,jSCh3, maxAVert, verticalCoefficient);
+    horizontal += getPowerIncrement(horizontal,jSCh4, maxAHoriz, horizontalCoefficient);
+    spin += getPowerIncrement(spin,jSCh1,maxASpin, spinCoefficient);
+
+*/
+    liftSpeed = liftCoefficient * 127 * (vexControllerGet(Btn8U) - vexControllerGet(Btn8D));
+
     //Test Auton Functions
     if(vexControllerGet(Btn7R)) auton3();
     if(vexControllerGet(Btn7L)) auton4();
@@ -286,19 +305,8 @@ int getPowerIncrement(int oldValue, int input, int deadZone, int maxAcceleration
 }
 
 /*
- * This function takes the controller input and modify values for use.
+ * 
  */
- void updateInput(void)
- {
-    //Movement input adjusted for deadzone and maximum acceleration
-    vertical += getPowerIncrement(vertical,vexControllerGet(Ch3),deadZone,maxAVert);
-    horizontal += getPowerIncrement(horizontal,vexControllerGet(Ch4),deadZone,maxAHoriz);
-    spin += getPowerIncrement(spin,vexControllerGet(Ch1),deadZone,maxASpin);
-    
-    //Lift input adjusted for deadzone FIX
-    //liftSpeed += getPowerIncrement(liftSpeed,vexControllerGet(Ch2),deadZone,liftSpeed - vexControllerGet(Ch2));
-
-    if(vexControllerGet(Ch2) > deadZone || vexControllerGet(Ch2) < -deadZone)
 int joystickAcceleration(int input)
 {
     //Determines the direction of the joystick
@@ -310,40 +318,91 @@ int joystickAcceleration(int input)
 
     return STRAIGHTENED_VALUES[index] * direction;
 }
+
+/*
+ * This function determines and returns an acceptable increment to the given 
+ * power level based on user input.
+ */
+int getPowerIncrement(int oldValue, int input, int maxAcceleration, float coefficient)
+{
+    input *= coefficient;
+    maxAcceleration *= coefficient;
+
+    if(input > oldValue + maxAcceleration) 
     {
-        liftSpeed = vexControllerGet(Ch2);
+        return maxAcceleration;
+    }
+    else if(input < oldValue - maxAcceleration) 
+    {
+        return -maxAcceleration;
     }
     else
     {
-        liftSpeed = 0;
+        return input - oldValue;
     }
-
-
-    //Add Claw and Shuttle input modifying code goes here...
-
- }
+}
 
 /*
- * This function sets all the motors for driver control based.
- * 
+ * Set the base drive motors.
  */
-void setMotors(void)
+void setBaseMotors(int spin, int vertical, int horizontal)
 {
-    //Setting Base Drive Motors
+    vexMotorSet(BASE_SW, spin + vertical - horizontal);
     vexMotorSet(BASE_NW, spin + vertical + horizontal);
     vexMotorSet(BASE_NE, spin - vertical + horizontal);
     vexMotorSet(BASE_SE, spin - vertical - horizontal);
-    vexMotorSet(BASE_SW, spin + vertical - horizontal);
+}
 
-    //Setting Lift Motors
+/*
+ * Set the lift motors.
+ */
+void setLiftMotors(int liftSpeed)
+{
     vexMotorSet(LIFT_1,liftSpeed);
     vexMotorSet(LIFT_2,liftSpeed);
     vexMotorSet(LIFT_3,liftSpeed);
+}
 
-    //Additional lift motors go here
+/*
+ * Set the shuttle motors
+ */
+void setShuttleMotors(bool in, bool out, bool back, bool front)
+{
+    if(in)// && !back)
+    {
+        vexMotorSet(SHUTTLE, 127);
+    }
+    else if(out)// && !front)
+    {
+        vexMotorSet(SHUTTLE, -127);
+    }
+    else
+    {
+        vexMotorSet(SHUTTLE, 0);
+    }
 
-    //Add Claw and Shuttle motor code here...
+}
 
+/*
+ * Set the claw motors
+ */
+bool setClawMotors(bool buttonPressed, bool buttonPressedPrevious, bool clawIsOpen)
+{
+    if(buttonPressed && !buttonPressedPrevious)
+    {
+        if(clawIsOpen) vexMotorSet(CLAW, 118);
+        else vexMotorSet(CLAW, -118);
+
+        clawIsOpen = !clawIsOpen;
+    }
+    // else
+    // {
+    //     if(clawIsOpen) vexMotorSet(CLAW, -118);
+    //     else vexMotorSet(CLAW, 118);
+    // }
+    // buttonPressedPrevious = buttonPressed
+    clawTogglePrevious = buttonPressed;
+    return clawIsOpen;
 }
 
 /*
