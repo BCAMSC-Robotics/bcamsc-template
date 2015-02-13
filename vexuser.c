@@ -98,6 +98,8 @@ int vertical = 0;
 int horizontal = 0;
 int spin = 0;
 int liftSpeed;
+float precisionConstant = .33;
+float spinPrecisionConstant = .33;
 
 //Limits and Acceleration adjustments
 int deadZone = 15;
@@ -105,6 +107,8 @@ int maxAVert = 10;
 int maxAHoriz = 10;
 int maxASpin = 10;
 
+//Multipliers for precision control
+float horizontalCoefficient, spinCoefficient, verticalCoefficient, liftCoefficient;
 /**
  * @brief User setup
  * @details
@@ -207,6 +211,11 @@ int getPowerIncrement(int oldValue, int input, int deadZone, int maxAcceleration
             return -maxAcceleration;
         }
         return input;
+        verticalCoefficient = horizontalCoefficient = spinCoefficient = liftCoefficient = precisionConstant;
+    }
+    else
+    {
+        verticalCoefficient = horizontalCoefficient = spinCoefficient = liftCoefficient = 1;
     }
     return -oldValue;
 }
