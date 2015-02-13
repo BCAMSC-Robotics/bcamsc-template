@@ -87,14 +87,11 @@ static  vexMotorCfg mConfig[kVexMotorNum] = {
 
 };
 
-// Input Variables
-
-int vertical;
-int horizontal;
-int spin;
-int liftSpeed;
-int clawPosition;
-int shuttleSpeed = 127;
+//Pre-input variables - used for smooth transitioning between dead zone and active zone of controller
+int jSCh1;
+int jSCh2;    //Unused (right vertical joystick)
+int jSCh3;
+int jSCh4;
 
 //Limits and Acceleration djustments
 
