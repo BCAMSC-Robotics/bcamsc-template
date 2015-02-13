@@ -29,19 +29,22 @@
 #include "routines.c"   // contains a function for each autonomous or programming skills routine.
 
 //Motors Declaration
+#define BASE_SW  kVexMotor_2    //Back Left Drive Motor
+#define BASE_NW  kVexMotor_3    //Front Left Drive Motor
+#define BASE_NE  kVexMotor_4    //Front Right Drive Motor
+#define BASE_SE  kVexMotor_5    //Back Right Drive Motor
 
-#define BASE_NW  kVexMotor_2  //Front Left Drive Motor
-#define BASE_NE  kVexMotor_3  //Front Right Drive Motor
-#define BASE_SE  kVexMotor_4  //Back Right Drive Motor
-#define BASE_SW  kVexMotor_1  //Back Left Drive Motor
+#define LIFT_1   kVexMotor_6    //Front Left Lift Motor
+#define LIFT_2   kVexMotor_7    //Front Right Lift Motor
+#define LIFT_3   kVexMotor_8    //Upper Lift Motor
 
-#define LIFT_1   kVexMotor_7  //Front Left Lift Motor
-#define LIFT_2   kVexMotor_8  //Front Right Lift Motor
-#define LIFT_3   kVexMotor_9 //Upper Lift Motor
+#define SHUTTLE  kVexMotor_10   //controls claw shuttle
+#define CLAW     kVexMotor_9    //actuates claw
 
+//Shuttle Buttons
+#define BACK_BUTTON kVexMotor_9
+#define FRONT_BUTTON kVexDigital_10
 
-#define SHUTTLE  kVexMotor_5  //controls claw shuttle
-#define CLAW     kVexMotor_6  //actuates claw
 
 //Other Preprocessor Declaration
 
@@ -64,17 +67,19 @@ static  vexDigiCfg  dConfig[kVexDigital_Num] = {
         { kVexDigital_12,   kVexSensorDigitalInput,  kVexConfigInput,       0 }
 };
 
+//Motor configuration
 static  vexMotorCfg mConfig[kVexMotorNum] = {
-        { BASE_SW,      kVexMotor393T,     kVexMotorNormal,       kVexSensorQuadEncoder,        kVexQuadEncoder_4 },
-        { BASE_NW,      kVexMotor393T,     kVexMotorNormal,       kVexSensorQuadEncoder,        kVexQuadEncoder_1 },
-        { BASE_NE,      kVexMotor393T,     kVexMotorNormal,       kVexSensorQuadEncoder,        kVexQuadEncoder_2 },
-        { BASE_SE,      kVexMotor393T,     kVexMotorReversed,     kVexSensorQuadEncoder,        kVexQuadEncoder_3 },
-        { SHUTTLE,      kVexMotor393T,     kVexMotorNormal,       kVexSensorIME,                kImeChannel_5 },
+        { kVexMotor_1,  kVexMotor393T,     kVexMotorNormal,       kVexSensorNone,               0 },
+        { BASE_SW,      kVexMotor393T,     kVexMotorNormal,       kVexSensorQuadEncoder,        kVexQuadEncoder_1 },
+        { BASE_NW,      kVexMotor393T,     kVexMotorNormal,       kVexSensorQuadEncoder,        kVexQuadEncoder_2 },
+        { BASE_NE,      kVexMotor393T,     kVexMotorNormal,       kVexSensorQuadEncoder,        kVexQuadEncoder_3 },
+        { BASE_SE,      kVexMotor393T,     kVexMotorReversed,     kVexSensorQuadEncoder,        kVexQuadEncoder_4 },
+        { LIFT_1,       kVexMotor393T,     kVexMotorNormal,       kVexSensorIME,                0 },
+        { LIFT_2,       kVexMotor393T,     kVexMotorReversed,     kVexSensorIME,                kImeChannel_1 },
+        { LIFT_3,       kVexMotor393T,     kVexMotorReversed,     kVexSensorIME,                0 },
         { CLAW,         kVexMotor393T,     kVexMotorNormal,       kVexSensorNone,               0 },
-        { LIFT_1,       kVexMotor393T,     kVexMotorReversed,     kVexSensorIME,                kImeChannel_3 },
-        { LIFT_2,       kVexMotor393T,     kVexMotorNormal,       kVexSensorIME,                kImeChannel_4 },
-        { LIFT_3,       kVexMotor393T,     kVexMotorNormal,       kVexSensorIME,                kImeChannel_1 },
-        { kVexMotor_10, kVexMotor393T,     kVexMotorNormal,       kVexSensorIME,                kImeChannel_6 }
+        { SHUTTLE,      kVexMotor393T,     kVexMotorNormal,       kVexSensorNone,               0 }
+
 };
 
 // Input Variables
