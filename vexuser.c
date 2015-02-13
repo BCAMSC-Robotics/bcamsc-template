@@ -25,6 +25,7 @@
 #include "vexuser.h"    // function declarations
 #include "apollo.h"     // the library that includes the apollo debug window in screen
 #include "smartmotor.h" // the library for smart motors
+#include "routines.c"   // contains a function for each autonomous or programming skills routine.
 
 //Motors Declaration
 
