@@ -109,6 +109,31 @@ int maxASpin = 10;
 
 //Multipliers for precision control
 float horizontalCoefficient, spinCoefficient, verticalCoefficient, liftCoefficient;
+
+//Auton Segments
+int autonSelect;    //Uses jumpers to select an auton routine
+
+//Liam's auton variables for dealing with claw and shuttle in go(), which is optimized for smart motors
+int clawPosition = 0;       //0 = open, 1 = closed
+int shuttlePosition = 0;    //0 = in, 1 = out
+int shuttlingTime = 150;    //This is the number of cycles through the while loop in go() that it takes to toggle the position of the shuttle. EDIT THIS
+
+//Autonomous Control Variables
+bool driveDone = false;
+bool liftDone = false;
+bool shuttleDone = false;
+bool done = false;
+//Autonomous Constants
+int autonLiftHeight = 0;
+const int autonShuttlingCounts = 1500000;
+int autonShuttleDirection = 0;
+const float driveCountsPerInch = 1;//11.05;
+const int liftCountsPerInch = 1;//25;
+int motorPorts[] = {BASE_SW, BASE_NW, BASE_NE, BASE_SE};
+int baseDistances[] = {0,0,0,0};
+float baseSpeeds[] = {0,0,0,0};
+float baseSpeedCap = 30;
+const float straighteningAdjustment = 1.05;
 /**
  * @brief User setup
  * @details
@@ -149,6 +174,8 @@ msg_t vexAutonomous( void *arg )
         // Don't hog cpu
         vexSleep( 25 );
     }
+    //Run the auton function
+    auton3();
 
     return (msg_t)0;
 }
@@ -218,6 +245,11 @@ int getPowerIncrement(int oldValue, int input, int deadZone, int maxAcceleration
         verticalCoefficient = horizontalCoefficient = spinCoefficient = liftCoefficient = 1;
     }
     return -oldValue;
+    //Test Auton Functions
+    if(vexControllerGet(Btn7R)) auton3();
+    if(vexControllerGet(Btn7L)) auton4();
+    if(vexControllerGet(Btn8L)) auton5();
+    if(vexControllerGet(Btn8R)) auton6();
 }
 
 /*
@@ -271,32 +303,250 @@ void setMotors(void)
 }
 
 /*
- * This function powers a motor for a certain distance autonomously.
+ * This function autonomously controls the robot for given direction and distance.
  */
-void setAutonMotor(int motor, int dist, int speed)
- {
-    //Convert distance from feet to encoder counts
-    dist *= wheelConstant;
+void go(void)
+{
+    //Reset autonomous control variables
+    driveDone = false;
+    liftDone = false;
+    shuttleDone = false;
 
-    //Set motor to speed
-    vexMotorSet(motor,speed);
+    baseSpeedCap = 45;
 
-    //Checks which direction the motor is going
-    if(vexMotorDirectionGet(motor))
+    //Reset all encoders
+    int i;
+    for(i = 0; i < 9; i++)
     {
-        //Determine when to stop
-        if(vexMotorPositionGet(motor) > dist)
+        vexMotorPositionSet(i, 0);
+    }
+
+    //Initiate Shuttle
+    int count = 0;
+    vexMotorSet(SHUTTLE, 100 * autonShuttleDirection);
+
+    done = false;
+    while(!done && !vexControllerGet(Btn7D))
+    {
+        //Call autonomous motor functions
+        if(!driveDone) driveControl();
+        if(!liftDone) liftControl();
+        if(!shuttleDone) shuttleControl(count++);
+
+        //Determine whether everything is complete
+        if(driveDone && liftDone && shuttleDone)
         {
-            //Stop the motor
-            vexMotorSet(motor,0); 
+            done = true;
         }
+        //vexSleep(25);
+    }
+    //Reset variables for next time
+    setBase(0,0,0);
+    setLift(0);
+    setShuttle(0);
+}
+
+//Controls the base drive motors
+void driveControl()
+{
+    driveDone = true;
+
+    //ADJUST base speed cap for acceleration and decceleration
+    /*
+    if(baseSpeedCap < 127)
+    {
+        baseSpeedCap += accelerationIncrement;
+
+        if(baseSpeedCap >= 127)
+        {
+            accelerationIncrement = 0;
+            accelerationRatio = 1 - getAverageComplete();
+        }
+        else if(baseSpeedCap <= minimumSpeedCap)
+        {
+            accelerationIncrement = 0;
+        }
+    }
+    if(getAverageComplete() >= accelerationRatio)
+    {
+        accelerationIncrement = -1;
+        if(baseSpeedCap == 127) baseSpeedCap = 126;
+
+    }*/
+
+//    baseSpeedCap = minimumSpeed + averageProportionComplete(1) * (1 - averageProportionComplete(1)) * 4 * (127 - minimumSpeed);
+
+    int i;
+    for(i = 0; i < 4; i++)
+    {
+        
+        //ADJUST speed for straightening
+       /* if(vexMotorPositionGet(motorPorts[i]) / baseDistances[i] < averageProportionComplete(i))
+            baseSpeeds[i] *= straighteningAdjustment;
+        else if(vexMotorPositionGet(motorPorts[i]) / baseDistances[i] > averageProportionComplete(i))
+            baseSpeeds[i] /= straighteningAdjustment;
+        */
+        if(abs(vexMotorPositionGet(motorPorts[i])) >= ((abs(baseDistances[i]) * driveCountsPerInch)))
+        {
+            baseSpeeds[i] = 0;
+        }
+        else
+        {
+            driveDone = false;
+        }
+
+    }
+
+    //Scale power levels, set motors
+    float maxSpeed = maxF(baseSpeeds);
+    for(i = 0; i < 4; i++)
+    {
+        baseSpeeds[i] *= baseSpeedCap / abs(maxSpeed);
+        vexMotorSet(motorPorts[i], baseSpeeds[i]);
+    }
+}
+
+//Raises the lift to a liftHeight Variable
+void liftControl()
+{
+    int speed = liftSpeed;
+    //Put straightening code here if desired
+    //Put acceleration adjusting code here if desired
+    //etc...
+
+    if(abs(vexMotorPositionGet(LIFT_2)) >= (abs(autonLiftHeight * liftCountsPerInch)))
+    {
+        speed = 0;
+        liftDone = true;
+    }
+    vexMotorSet(LIFT_1, speed);
+    vexMotorSet(LIFT_2, speed);
+    vexMotorSet(LIFT_3, speed);
+}
+
+//pushes the shuttle in, out, or not at all
+void shuttleControl(int count)
+{
+    if(count > autonShuttlingCounts || autonShuttleDirection == 0)
+    {
+        vexMotorSet(SHUTTLE, 0);
+        shuttleDone = true;
+    }
+}
+
+void setBase(int forward, int right, int spin)
+{
+    baseDistances[0] = ( forward - right + spin);
+    baseDistances[1] = ( forward + right + spin);
+    baseDistances[2] = (-forward + right + spin);
+    baseDistances[3] = (-forward - right + spin);
+
+    int i;
+    for(i = 0; i < 4; i++)
+    {
+        baseSpeeds[i] = baseSpeedCap * baseDistances[i] / max(baseDistances);
+    }
+}
+
+void setLift(int distance)
+{
+    autonLiftHeight = distance;
+    liftSpeed = 127 * distance / abs(distance);
+}
+
+/*
+ * This toggles the direction of the shuttle - in and out.
+ */
+void setShuttle(int direction)
+{
+   autonShuttleDirection = -direction;
+}
+
+void setClaw(int x)
+{
+    vexMotorSet(CLAW, 118 * x); //1 is open, -1 is closed
+}
+
+/*
+ * This returns the maximum value in an array.
+ */
+int max(int a[4])
+{
+    int b[4];
+    //Make all values positive
+    int i;
+    for(i = 0; i < 4; i++)
+        b[i] = abs(a[i]);
+
+    //Find bnd return the lbrgest vblue
+    if(b[0] > b[1] && b[1] > b[2] && b[0] > b[3])
+        return b[0];
+    else if(b[1] > b[2] && b[1] > b[3])
+        return b[1];
+    else if(b[2] > b[3])
+        return b[2];
+    else
+        return b[3];
+}
+
+/*
+ * This returns the maximum value in an array.
+ */
+float maxF(float a[4])
+{
+    float b[4];
+    //Make all values positive
+    int i;
+    for(i = 0; i < 4; i++)
+        b[i] = abs(a[i]);
+
+    //Find bnd return the lbrgest vblue
+    if(b[0] > b[1] && b[1] > b[2] && b[0] > b[3])
+        return b[0];
+    else if(b[1] > b[2] && b[1] > b[3])
+        return b[1];
+    else if(b[2] > b[3])
+        return b[2];
+    else
+        return b[3];
+}
+
+/*
+ *
+ */
+int signOf(int x)
+{
+    if(x > 0) return 1;
+    else return -1;
+}
+
+/*
+ * This checks to make sure the inputted value isn't inside the deadZone.
+ */
+int deadZoneAdjust(int value)
+{
+    if(abs(value) >= deadZone)
+    {
+        return value;
     }
     else
     {
-        //Determine when to stop
-        if(vexMotorPositionGet(motor) < -dist)
+        return 0;
+    }
+}
+
+/*
+ * Finds the average ratio, among all the drive motors excluding index, of distance travelled to destination distance.
+ */
+float averageProportionComplete(int index)
+{
+    float average = 0;
+    int i;
+    int n = 0;
+    for(i = 0; i < 4; i++)
+    {
+        if(i != index)
         {
-            //Stop the motor
             vexMotorSet(motor,0);
         }
     }
