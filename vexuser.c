@@ -95,6 +95,11 @@ int jSCh4;
 
 //Limits and Acceleration djustments
 
+//Input variables
+int vertical = 0;
+int horizontal = 0;
+int spin = 0;
+int liftSpeed;
 int deadZone = 15;
 int maxAVert = 5;
 int maxAHoriz = 1;
