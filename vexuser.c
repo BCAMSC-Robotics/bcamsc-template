@@ -169,8 +169,8 @@ const unsigned int STRAIGHTENED_VALUES[128] =
  */
 void vexUserSetup()
 {
-	vexDigitalConfigure( dConfig, DIG_CONFIG_SIZE( dConfig ) );
-	vexMotorConfigure( mConfig, MOT_CONFIG_SIZE( mConfig ) );
+    vexDigitalConfigure(dConfig, DIG_CONFIG_SIZE( dConfig));
+    vexMotorConfigure(mConfig, MOT_CONFIG_SIZE( mConfig));
 }
 
 /**
@@ -182,7 +182,6 @@ void vexUserSetup()
  */
 void vexUserInit()
 {
-
 }
 
 /**
@@ -190,18 +189,13 @@ void vexUserInit()
  * @details
  *  This thread is started when the autonomous period is started
  */
-msg_t vexAutonomous( void *arg )
+msg_t vexAutonomous(void *arg)
 {
     (void)arg;
 
     // Must call this
     vexTaskRegister("auton");
 
-    while(1)
-    {
-        // Don't hog cpu
-        vexSleep( 25 );
-    }
     //Run the auton function
     auton3();
 
@@ -651,6 +645,30 @@ float averageProportionComplete(int index)
         if(i != index)
         {
             vexMotorSet(motor,0);
+            if(baseDistances[i])
+            {
+                average += abs(vexMotorPositionGet(motorPorts[i]) / baseDistances[i]);
+                n++;
+            }
         }
     }
- }
+    average /= n;
+    return average;
+}
+
+/*
+ * Finds the average ratio of distance travelled to destination distance for all base drive motors.
+ */
+float getAverageComplete()
+{
+    float sumCompleted = 0;
+    float sumTotal = 0;
+
+    int i;
+    for(i = 0; i < 4; i++)
+    {
+        sumCompleted += abs(vexMotorPositionGet(motorPorts[i]));
+        sumTotal+= abs(baseDistances[i]);
+    }
+    return sumCompleted / sumTotal;
+}
