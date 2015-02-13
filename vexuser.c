@@ -113,6 +113,8 @@ float horizontalCoefficient, spinCoefficient, verticalCoefficient, liftCoefficie
 //Auton Segments
 int autonSelect;    //Uses jumpers to select an auton routine
 
+float inchesPerDegree = .14;
+
 //Liam's auton variables for dealing with claw and shuttle in go(), which is optimized for smart motors
 int clawPosition = 0;       //0 = open, 1 = closed
 int shuttlePosition = 0;    //0 = in, 1 = out
@@ -123,12 +125,18 @@ bool driveDone = false;
 bool liftDone = false;
 bool shuttleDone = false;
 bool done = false;
+
+bool clawTogglePrevious = false;
+
 //Autonomous Constants
 int autonLiftHeight = 0;
 const int autonShuttlingCounts = 1500000;
 int autonShuttleDirection = 0;
 const float driveCountsPerInch = 1;//11.05;
 const int liftCountsPerInch = 1;//25;
+
+const int minimumSpeed = 30;
+
 int motorPorts[] = {BASE_SW, BASE_NW, BASE_NE, BASE_SE};
 int baseDistances[] = {0,0,0,0};
 float baseSpeeds[] = {0,0,0,0};
