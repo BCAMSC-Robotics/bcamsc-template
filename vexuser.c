@@ -93,17 +93,17 @@ int jSCh2;    //Unused (right vertical joystick)
 int jSCh3;
 int jSCh4;
 
-//Limits and Acceleration djustments
-
 //Input variables
 int vertical = 0;
 int horizontal = 0;
 int spin = 0;
 int liftSpeed;
+
+//Limits and Acceleration adjustments
 int deadZone = 15;
-int maxAVert = 5;
-int maxAHoriz = 1;
-int maxASpin = 3;
+int maxAVert = 10;
+int maxAHoriz = 10;
+int maxASpin = 10;
 
 /**
  * @brief User setup
