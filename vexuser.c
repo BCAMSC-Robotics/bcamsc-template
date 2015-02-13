@@ -45,6 +45,11 @@
 #define BACK_BUTTON kVexMotor_9
 #define FRONT_BUTTON kVexDigital_10
 
+//Jumpers used for autonomous strategy selection
+#define jump1 kVexDigital_9
+#define jump2 kVexDigital_10
+#define jump3 kVexDigital_11
+#define jump4 kVexDigital_12
 
 //Other Preprocessor Declaration
 
