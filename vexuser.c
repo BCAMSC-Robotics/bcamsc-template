@@ -233,8 +233,8 @@ msg_t vexOperator(void *arg)
         setLiftMotors(liftSpeed);
 
         //Shuttle
-        shuttleIn = vexControllerGet(Btn5D);
-        shuttleOut = vexControllerGet(Btn5U);
+        shuttleIn = vexControllerGet(Btn5U);
+        shuttleOut = vexControllerGet(Btn5D);
         shuttleReachedBack = vexDigitalPinGet(BACK_BUTTON);
         shuttleReachedFront = vexDigitalPinGet(FRONT_BUTTON);
 
@@ -358,11 +358,11 @@ void setLiftMotors(int liftSpeed)
  */
 void setShuttleMotors(bool in, bool out, bool back, bool front)
 {
-    if(in)// && !back)
+    if(in && front)
     {
         vexMotorSet(SHUTTLE, 127);
     }
-    else if(out)// && !front)
+    else if(out && back)
     {
         vexMotorSet(SHUTTLE, -127);
     }
