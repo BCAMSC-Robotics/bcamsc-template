@@ -475,13 +475,21 @@ void driveControl()
     int i;
     for(i = 0; i < 4; i++)
     {
-        
-        //ADJUST speed for straightening
-        if(vexMotorPositionGet(motorPorts[i]) / baseDistances[i] < averageProportionComplete(i))
-            baseSpeeds[i] *= straighteningAdjustment;
-        else if(vexMotorPositionGet(motorPorts[i]) / baseDistances[i] > averageProportionComplete(i))
-            baseSpeeds[i] /= straighteningAdjustment;
 
+
+        //ADJUST speed for straightening
+        float currentProportionComplete = abs(vexMotorPositionGet(motorPorts[i]) / baseDistances[i]);
+
+        if(currentProportionComplete < averageProportionComplete(i))
+        {
+            baseSpeeds[i] *= straighteningAdjustment;
+        }
+        else if(currentProportionComplete > averageProportionComplete(i))
+        {
+            baseSpeeds[i] /= straighteningAdjustment;
+        }
+
+        //Determining if complete
         if(abs(vexMotorPositionGet(motorPorts[i])) >= ((abs(baseDistances[i]) * driveCountsPerInch)))
         {
             baseSpeeds[i] = 0;
