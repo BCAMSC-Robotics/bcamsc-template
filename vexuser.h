@@ -137,6 +137,8 @@ void auton6(void);
 void auton7(void);
 void lift12(void);
 
+void testAuton(void);
+
 int cap(int x, int lBound, int uBound);
 int deadZoneAdjust(int value);
 int signOf(int x);

@@ -8,6 +8,12 @@
  * robot will push cube up and onto the short post
  */
 
+void testAuton()
+{
+	setBase(400,0,0);
+	go();
+}
+
 void auton0()
 {
 	//lift

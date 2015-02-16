@@ -197,7 +197,7 @@ msg_t vexAutonomous(void *arg)
     vexTaskRegister("auton");
 
     //Run the auton function
-    auton3();
+    testAuton();
 
     return (msg_t)0;
 }
@@ -288,10 +288,13 @@ void updateInput(void)
     liftSpeed = liftCoefficient * 127 * (vexControllerGet(Btn8U) - vexControllerGet(Btn8D));
 
     //Test Auton Functions
+    /*
     if(vexControllerGet(Btn7R)) auton3();
     if(vexControllerGet(Btn7L)) auton4();
     if(vexControllerGet(Btn8L)) auton5();
     if(vexControllerGet(Btn8R)) auton6();
+    */
+    if(vexControllerGet(Btn7U)) testAuton();
 }
 
 /*
@@ -411,6 +414,8 @@ void go(void)
     int count = 0;
     vexMotorSet(SHUTTLE, 100 * autonShuttleDirection);
 
+    vexSleep(1000);
+
     done = false;
     while(!done && !vexControllerGet(Btn7D))
     {
@@ -467,11 +472,11 @@ void driveControl()
     {
         
         //ADJUST speed for straightening
-       /* if(vexMotorPositionGet(motorPorts[i]) / baseDistances[i] < averageProportionComplete(i))
+        if(vexMotorPositionGet(motorPorts[i]) / baseDistances[i] < averageProportionComplete(i))
             baseSpeeds[i] *= straighteningAdjustment;
         else if(vexMotorPositionGet(motorPorts[i]) / baseDistances[i] > averageProportionComplete(i))
             baseSpeeds[i] /= straighteningAdjustment;
-        */
+
         if(abs(vexMotorPositionGet(motorPorts[i])) >= ((abs(baseDistances[i]) * driveCountsPerInch)))
         {
             baseSpeeds[i] = 0;
