@@ -410,9 +410,14 @@ void go(void)
         vexMotorPositionSet(i, 0);
     }
 
-    //Initiate Shuttle
+    //Initiate Motors
     int count = 0;
     vexMotorSet(SHUTTLE, 100 * autonShuttleDirection);
+
+    for(i = 0; i < 4; i++)
+    {
+        vexMotorSet(i, baseSpeeds[i]);
+    }
 
     vexSleep(1000);
 
