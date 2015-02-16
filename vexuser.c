@@ -646,7 +646,7 @@ float averageProportionComplete(int index)
             vexMotorSet(motorPorts[i],0);
             if(baseDistances[i])
             {
-                average += abs(vexMotorPositionGet(motorPorts[i]) / baseDistances[i]);
+                average += abs(vexMotorPositionGet(motorPorts[i]) / (baseDistances[i] * driveCountsPerInch));
                 n++;
             }
         }
@@ -667,7 +667,7 @@ float getAverageComplete()
     for(i = 0; i < 4; i++)
     {
         sumCompleted += abs(vexMotorPositionGet(motorPorts[i]));
-        sumTotal+= abs(baseDistances[i]);
+        sumTotal+= abs(baseDistances[i] * driveCountsPerInch);
     }
     return sumCompleted / sumTotal;
 }
