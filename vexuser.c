@@ -470,13 +470,13 @@ void driveControl()
 
     }*/
 
-//    baseSpeedCap = minimumSpeed + averageProportionComplete(1) * (1 - averageProportionComplete(1)) * 4 * (127 - minimumSpeed);
+    //Adjusts the maximum speed cap to control the acceleration and decceleration 
+    float niceLittleShape = averageProportionComplete(-1) * (1 - averageProportionComplete(-1)) * 4;    //If we are near the beginning or end of the step, this value is very small.
+    baseSpeedCap = minimumSpeed + niceLittleShape * (127 - minimumSpeed);   //Stretch between the minimum and maximum speeds
 
     int i;
     for(i = 0; i < 4; i++)
     {
-
-
         //ADJUST speed for straightening
         float currentProportionComplete = abs(vexMotorPositionGet(motorPorts[i]) / baseDistances[i]);
 
