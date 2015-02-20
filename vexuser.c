@@ -636,7 +636,7 @@ int deadZoneAdjust(int value)
 /*
  * Finds the average ratio, among all the drive motors excluding index, of distance travelled to destination distance.
  */
-float averageProportionComplete(int index)
+float prop(int index)
 {
     float average = 0;
     int i;
@@ -645,15 +645,14 @@ float averageProportionComplete(int index)
     {
         if(i != index)
         {
-            vexMotorSet(motorPorts[i],0);
-            if(baseDistances[i])
+            if(baseDistances[i] != 0 && baseSpeeds[i] != 0)
             {
-                average += abs(vexMotorPositionGet(motorPorts[i]) / (baseDistances[i] * driveCountsPerInch));
+                average += (float)abs((float)vexMotorPositionGet(motorPorts[i]) / (float)((float)baseDistances[i] * (float)driveCountsPerInch));
                 n++;
             }
         }
     }
-    average /= n;
+    average /= (float)n;
     return average;
 }
 
@@ -669,7 +668,7 @@ float getAverageComplete()
     for(i = 0; i < 4; i++)
     {
         sumCompleted += abs(vexMotorPositionGet(motorPorts[i]));
-        sumTotal+= abs(baseDistances[i] * driveCountsPerInch);
+        sumTotal+= abs((float)baseDistances[i] * (float)driveCountsPerInch);
     }
     return sumCompleted / sumTotal;
 }
