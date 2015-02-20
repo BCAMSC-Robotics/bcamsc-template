@@ -200,7 +200,7 @@ msg_t vexAutonomous(void *arg)
     vexTaskRegister("auton");
 
     //Run the auton function
-    testAuton();
+    auton1();
 
     return (msg_t)0;
 }
