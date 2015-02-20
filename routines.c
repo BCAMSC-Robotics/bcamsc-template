@@ -250,7 +250,7 @@ void auton0()
 void auton1()
 {
 	//Nudge preload
-	setBase(12,-12,0);
+	setBase(12,12,0);
 	go();
 	vexSleep(300);
 
@@ -410,7 +410,7 @@ void auton3()
 	go();
 	vexSleep(300);
 
-	setBase(0,0,152);
+	setBase(0,0,140);
 	go();
 	vexSleep(300);
 
@@ -418,7 +418,7 @@ void auton3()
 	go();
 	vexSleep(300);
 
-	setBase(-500,0,0);
+	setBase(-150,0,0);
 	go();
 }
 
