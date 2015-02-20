@@ -320,7 +320,7 @@ void auton1()
 
 	//Drop peg
 	setClaw(-1);
-	vexSleep(300);
+	//vexSleep(300);
 
 	//	A	A	A
 	//	|	|	|
@@ -329,6 +329,11 @@ void auton1()
 	//Back off (both 8- and 12-point)
 	setShuttle(-1);
 	go();
+
+	//Really back off
+	setBase(-15,15,0);
+	go();
+
 }
 
 //Start in red low post square facing between short post and skyrise
