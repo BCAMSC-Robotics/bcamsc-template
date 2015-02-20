@@ -404,7 +404,7 @@ void go(void)
     liftDone = false;
     shuttleDone = false;
 
-    baseSpeedCap = 45;
+    baseSpeedCap = 60;
 
     //Reset all encoders
     int i;
@@ -441,6 +441,7 @@ void go(void)
 void driveControl()
 {
     driveDone = true;
+    float proportion = getAverageComplete();
 
     //ADJUST base speed cap for acceleration and decceleration
     /*
@@ -495,6 +496,12 @@ void driveControl()
         }
     }
 
+    //Adjusts the maximum speed cap to control the acceleration and decceleration 
+    float niceLittleShape = proportion * (1.0 - proportion) * 4.0;    //If we are near the beginning or end of the step, this value is very small.
+    baseSpeedCap = minimumSpeed + niceLittleShape * (float)(maximumSpeed - minimumSpeed);   //Stretch between the minimum and maximum speeds
+    if(baseSpeedCap < minimumSpeed)
+        baseSpeedCap = minimumSpeed;
+
     //Scale power levels, set motors
     float maxSpeed = maxF(baseSpeeds);
     for(i = 0; i < 4; i++)
@@ -534,6 +541,8 @@ void shuttleControl(bool backButton, bool frontButton)
 
 void setBase(int forward, int right, int spin)
 {
+    baseSpeedCap = 127;
+
     baseDistances[0] = ( forward - right + spin);
     baseDistances[1] = ( forward + right + spin);
     baseDistances[2] = (-forward + right + spin);
