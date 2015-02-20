@@ -345,12 +345,12 @@ void auton2()
 	vexSleep(300);
 
 	//Turn to land above low post
-	setBase(0,0,-140);
+	setBase(0,0,-130);
 	go();
 	vexSleep(300);
 
 	//Move forward
-	setBase(15,0,0);
+	setBase(50,0,0);
 	go();
 	vexSleep(300);
 
@@ -359,6 +359,7 @@ void auton2()
 	go();
 	vexSleep(300);
 
+	/*
 	//4-point only
 	//	|	|	|
 	//	V	V	V
@@ -402,9 +403,10 @@ void auton2()
 	//	A	A	A
 	//	|	|	|
 	//4-point only
+	*/
 
 	//Back off (both 3- and 4-point)
-	setBase(-100,0,0);
+	setBase(-150,0,0);
 	go();
 }
 
@@ -415,7 +417,11 @@ void auton3()
 	go();
 	vexSleep(300);
 
-	setBase(0,0,140);
+	setBase(0,0,120);
+	go();
+	vexSleep(300);
+
+	setBase(60,0,0);
 	go();
 	vexSleep(300);
 
