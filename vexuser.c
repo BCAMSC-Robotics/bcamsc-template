@@ -108,7 +108,7 @@ int maxAHoriz = 10;
 int maxASpin = 10;
 
 //Multipliers for precision control
-float horizontalCoefficient, spinCoefficient, verticalCoefficient, liftCoefficient;
+float horizontalCoefficient, spinCoefficient, verticalCoefficient, liftCoefficient, shuttleCoefficient;
 
 //Auton Segments
 int autonSelect;    //Uses jumpers to select an auton routine
@@ -120,6 +120,10 @@ int clawPosition = 0;       //0 = open, 1 = closed
 int shuttlePosition = 0;    //0 = in, 1 = out
 int shuttlingTime = 150;    //This is the number of cycles through the while loop in go() that it takes to toggle the position of the shuttle. EDIT THIS
 
+int accelerationIncrement = 1;
+int minimumSpeedCap = 35;
+int accelerationRatio;
+
 //Autonomous Control Variables
 bool driveDone = false;
 bool liftDone = false;
@@ -130,36 +134,35 @@ bool clawTogglePrevious = false;
 
 //Autonomous Constants
 int autonLiftHeight = 0;
-const int autonShuttlingCounts = 1500000;
+const int autonShuttlingCounts = 500000;
 int autonShuttleDirection = 0;
 const float driveCountsPerInch = 1;//11.05;
 const int liftCountsPerInch = 1;//25;
 
-const int minimumSpeed = 30;
+const float maximumSpeed = 127;
+const float minimumSpeed = 25;
 
 int motorPorts[] = {BASE_SW, BASE_NW, BASE_NE, BASE_SE};
 int baseDistances[] = {0,0,0,0};
 float baseSpeeds[] = {0,0,0,0};
-float baseSpeedCap = 30;
+float baseSpeedCap = 20;
 const float straighteningAdjustment = 1.05;
 
 const unsigned int STRAIGHTENED_VALUES[128] = 
 {
-     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 
-    21, 21, 22, 22, 22, 23, 24, 24, 25, 
-    25, 25, 25, 26, 27, 27, 28, 28, 28, 
-    28, 29, 30, 30, 30, 31, 31, 
-    32, 32, 32, 33, 33, 34, 34, 35, 
-    35, 35, 36, 36, 37, 37, 37, 37, 38, 38,
-    39, 39, 39, 40, 40, 41, 41, 42, 42,
-    43, 44, 44, 45, 45, 46, 46, 47, 47,
-    48, 48, 49, 50, 50, 51, 52, 52, 53,
-    54, 55, 56, 57, 57, 58, 59, 60, 61,
-    62, 63, 64, 65, 66, 67, 67, 68, 70,
-    71, 72, 72, 73, 74, 76, 77, 78, 79,
-    79, 80, 81, 83, 84, 84, 86, 86, 87,
-    87, 88, 88, 89, 89, 90, 127, 127,
-    127, 127
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    2,  4,  6,  8,  10, 12, 14, 14, 14, 14,
+    14, 14, 15, 15, 15, 15, 15, 15, 16, 16,
+    16, 16, 16, 16, 17, 17, 17, 17, 17, 17,
+    18, 18, 18, 18, 18, 18, 19, 19, 19, 19,
+    19, 19, 20, 20, 20, 20, 21, 21, 21, 21,
+    22, 22, 22, 22, 23, 23, 23, 23, 24, 24,
+    24, 24, 25, 25, 25, 26, 26, 26, 27, 27,
+    28, 28, 29, 29, 30, 30, 31, 31, 32, 32,
+    33, 33, 34, 34, 35, 35, 36, 36, 37, 37,
+    38, 38, 40, 41, 42, 43, 44, 45, 47, 48,
+    50, 52, 54, 56, 58, 60, 63, 67, 71, 76,
+    81, 87, 93, 100,107,117,127,127
 };
 
 /**
@@ -233,8 +236,8 @@ msg_t vexOperator(void *arg)
         setLiftMotors(liftSpeed);
 
         //Shuttle
-        shuttleIn = vexControllerGet(Btn5U);
-        shuttleOut = vexControllerGet(Btn5D);
+        shuttleIn = vexControllerGet(Btn5D);
+        shuttleOut = vexControllerGet(Btn5U);
         shuttleReachedBack = vexDigitalPinGet(BACK_BUTTON);
         shuttleReachedFront = vexDigitalPinGet(FRONT_BUTTON);
 
@@ -267,11 +270,11 @@ void updateInput(void)
     //Sets precision coefficients based on user input
     if(vexControllerGet(Btn6D))
     {
-        verticalCoefficient = horizontalCoefficient = spinCoefficient = liftCoefficient = precisionConstant;
+        verticalCoefficient = horizontalCoefficient = spinCoefficient = liftCoefficient = shuttleCoefficient = precisionConstant;
     }
     else
     {
-        verticalCoefficient = horizontalCoefficient = spinCoefficient = liftCoefficient = 1;
+        verticalCoefficient = horizontalCoefficient = spinCoefficient = liftCoefficient = shuttleCoefficient = 1;
     }
 
     //Adjusts the motor values to be proportional to the acceleration of the joystick
@@ -288,13 +291,13 @@ void updateInput(void)
     liftSpeed = liftCoefficient * 127 * (vexControllerGet(Btn8U) - vexControllerGet(Btn8D));
 
     //Test Auton Functions
-    /*
-    if(vexControllerGet(Btn7R)) auton3();
-    if(vexControllerGet(Btn7L)) auton4();
-    if(vexControllerGet(Btn8L)) auton5();
-    if(vexControllerGet(Btn8R)) auton6();
-    */
-    if(vexControllerGet(Btn7U)) testAuton();
+    
+    if(vexControllerGet(Btn7R)) auton0();   //Red skyrise
+    if(vexControllerGet(Btn7L)) auton1();   //Blue skyrise
+    if(vexControllerGet(Btn8R)) auton2();   //Red post
+    if(vexControllerGet(Btn8L)) auton3();   //Blue post
+    
+    if(vexControllerGet(Btn7U)) auton4();
 }
 
 /*
@@ -363,11 +366,11 @@ void setShuttleMotors(bool in, bool out, bool back, bool front)
 {
     if(in && front)
     {
-        vexMotorSet(SHUTTLE, 127);
+        vexMotorSet(SHUTTLE, 127 * shuttleCoefficient);
     }
     else if(out && back)
     {
-        vexMotorSet(SHUTTLE, -127);
+        vexMotorSet(SHUTTLE, -127 * shuttleCoefficient);
     }
     else
     {
@@ -401,7 +404,7 @@ void go(void)
     liftDone = false;
     shuttleDone = false;
 
-    baseSpeedCap = 45;
+    baseSpeedCap = 60;
 
     //Reset all encoders
     int i;
@@ -411,15 +414,7 @@ void go(void)
     }
 
     //Initiate Motors
-    int count = 0;
     vexMotorSet(SHUTTLE, 100 * autonShuttleDirection);
-
-    for(i = 0; i < 4; i++)
-    {
-        vexMotorSet(i, baseSpeeds[i]);
-    }
-
-    vexSleep(1000);
 
     done = false;
     while(!done && !vexControllerGet(Btn7D))
@@ -427,7 +422,7 @@ void go(void)
         //Call autonomous motor functions
         if(!driveDone) driveControl();
         if(!liftDone) liftControl();
-        if(!shuttleDone) shuttleControl(count++);
+        if(!shuttleDone) shuttleControl(!vexDigitalPinGet(BACK_BUTTON), !vexDigitalPinGet(FRONT_BUTTON));
 
         //Determine whether everything is complete
         if(driveDone && liftDone && shuttleDone)
@@ -446,51 +441,27 @@ void go(void)
 void driveControl()
 {
     driveDone = true;
+    float proportion = getAverageComplete();
 
     //ADJUST base speed cap for acceleration and decceleration
-    /*
-    if(baseSpeedCap < 127)
-    {
-        baseSpeedCap += accelerationIncrement;
-
-        if(baseSpeedCap >= 127)
-        {
-            accelerationIncrement = 0;
-            accelerationRatio = 1 - getAverageComplete();
-        }
-        else if(baseSpeedCap <= minimumSpeedCap)
-        {
-            accelerationIncrement = 0;
-        }
-    }
-    if(getAverageComplete() >= accelerationRatio)
-    {
-        accelerationIncrement = -1;
-        if(baseSpeedCap == 127) baseSpeedCap = 126;
-
-    }*/
-
-    //Adjusts the maximum speed cap to control the acceleration and decceleration 
-    float niceLittleShape = averageProportionComplete(-1) * (1 - averageProportionComplete(-1)) * 4;    //If we are near the beginning or end of the step, this value is very small.
-    baseSpeedCap = minimumSpeed + niceLittleShape * (127 - minimumSpeed);   //Stretch between the minimum and maximum speeds
-
     int i;
     for(i = 0; i < 4; i++)
     {
-        //ADJUST speed for straightening
-        float currentProportionComplete = abs(vexMotorPositionGet(motorPorts[i]) / baseDistances[i]);
 
-        if(currentProportionComplete < averageProportionComplete(i))
+        //ADJUST speed for straightening
+        float currentProportionComplete = abs((float)vexMotorPositionGet(motorPorts[i]) / ((float)baseDistances[i] * driveCountsPerInch));
+
+        if(currentProportionComplete < getAverageComplete())
         {
             baseSpeeds[i] *= straighteningAdjustment;
         }
-        else if(currentProportionComplete > averageProportionComplete(i))
+        else if(currentProportionComplete > getAverageComplete())
         {
             baseSpeeds[i] /= straighteningAdjustment;
         }
 
         //Determining if complete
-        if(abs(vexMotorPositionGet(motorPorts[i])) >= ((abs(baseDistances[i]) * driveCountsPerInch)))
+        if(abs(vexMotorPositionGet(motorPorts[i])) >= abs(baseDistances[i]) * driveCountsPerInch)
         {
             baseSpeeds[i] = 0;
         }
@@ -498,8 +469,13 @@ void driveControl()
         {
             driveDone = false;
         }
-
     }
+
+    //Adjusts the maximum speed cap to control the acceleration and decceleration 
+    float niceLittleShape = proportion * (1.0 - proportion) * 4.0;    //If we are near the beginning or end of the step, this value is very small.
+    baseSpeedCap = minimumSpeed + niceLittleShape * (float)(maximumSpeed - minimumSpeed);   //Stretch between the minimum and maximum speeds
+    if(baseSpeedCap < minimumSpeed)
+        baseSpeedCap = minimumSpeed;
 
     //Scale power levels, set motors
     float maxSpeed = maxF(baseSpeeds);
@@ -529,9 +505,9 @@ void liftControl()
 }
 
 //pushes the shuttle in, out, or not at all
-void shuttleControl(int count)
+void shuttleControl(bool backButton, bool frontButton)
 {
-    if(count > autonShuttlingCounts || autonShuttleDirection == 0)
+    if((autonShuttleDirection == 1 && frontButton == 1) || (autonShuttleDirection == -1 && backButton == 1) || (autonShuttleDirection == 0))
     {
         vexMotorSet(SHUTTLE, 0);
         shuttleDone = true;
@@ -540,6 +516,8 @@ void shuttleControl(int count)
 
 void setBase(int forward, int right, int spin)
 {
+    baseSpeedCap = 127;
+
     baseDistances[0] = ( forward - right + spin);
     baseDistances[1] = ( forward + right + spin);
     baseDistances[2] = (-forward + right + spin);
@@ -582,8 +560,8 @@ int max(int a[4])
     for(i = 0; i < 4; i++)
         b[i] = abs(a[i]);
 
-    //Find bnd return the lbrgest vblue
-    if(b[0] > b[1] && b[1] > b[2] && b[0] > b[3])
+    //Find and return the largest value
+    if(b[0] > b[1] && b[0] > b[2] && b[0] > b[3])
         return b[0];
     else if(b[1] > b[2] && b[1] > b[3])
         return b[1];
@@ -604,8 +582,8 @@ float maxF(float a[4])
     for(i = 0; i < 4; i++)
         b[i] = abs(a[i]);
 
-    //Find bnd return the lbrgest vblue
-    if(b[0] > b[1] && b[1] > b[2] && b[0] > b[3])
+    //Find and return the largest value
+    if(b[0] > b[1] && b[0] > b[2] && b[0] > b[3])
         return b[0];
     else if(b[1] > b[2] && b[1] > b[3])
         return b[1];
@@ -642,7 +620,7 @@ int deadZoneAdjust(int value)
 /*
  * Finds the average ratio, among all the drive motors excluding index, of distance travelled to destination distance.
  */
-float averageProportionComplete(int index)
+float prop(int index)
 {
     float average = 0;
     int i;
@@ -651,15 +629,14 @@ float averageProportionComplete(int index)
     {
         if(i != index)
         {
-            vexMotorSet(motorPorts[i],0);
-            if(baseDistances[i])
+            if(baseDistances[i] != 0 && baseSpeeds[i] != 0)
             {
-                average += abs(vexMotorPositionGet(motorPorts[i]) / (baseDistances[i] * driveCountsPerInch));
+                average += (float)abs((float)vexMotorPositionGet(motorPorts[i]) / (float)((float)baseDistances[i] * (float)driveCountsPerInch));
                 n++;
             }
         }
     }
-    average /= n;
+    average /= (float)n;
     return average;
 }
 
@@ -675,7 +652,7 @@ float getAverageComplete()
     for(i = 0; i < 4; i++)
     {
         sumCompleted += abs(vexMotorPositionGet(motorPorts[i]));
-        sumTotal+= abs(baseDistances[i] * driveCountsPerInch);
+        sumTotal+= abs((float)baseDistances[i] * (float)driveCountsPerInch);
     }
     return sumCompleted / sumTotal;
 }

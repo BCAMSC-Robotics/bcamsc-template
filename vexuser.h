@@ -75,7 +75,7 @@ void driveControl(void);
 
 void liftControl(void);
 
-void shuttleControl(int count);
+void shuttleControl(bool backButton, bool frontButton);
 
 /**
  * This function straightens the motor to ensure that it sticks to the plan. 
@@ -105,19 +105,39 @@ void setShuttle(int direction);
 void setClaw(int x);
 
 /*
- * returns the largest value in an array of 4 ints, notably baseDistances
+ * returns the largest value in an array of ints
  */
-int max(int a[4]);
+int max(int a[]);
 
 /*
- * returns the largest value in an array of 4 floats, notably baseDistances
+ * returns the largest value in an array of floats
  */
-float maxF(float a[4]);
+float maxF(float a[]);
+
+/*
+ * returns the smallest value in an array of floats
+ */
+float minF(float a[]);
+
+/*
+ * Returns the average value of an array of floats
+ */
+float averageF(float a[]);
+
+/*
+ * Returns the number of elements in an array of ints
+ */
+int length(int a[]);
+
+/*
+ * Returns the number of elements in an array of floats
+ */
+float lengthF(float a[]);
 
 /*
  * Finds the average ratio, among all the drive motors excluding index, of distance travelled to destination distance
  */
-float averageProportionComplete(int index);
+float prop(int index);
 
 /**
  * Returns the sign of an int. Returns 1 for a positive, -1 for a negative, and 0 for a zero x.
@@ -135,7 +155,6 @@ void auton4(void);
 void auton5(void);
 void auton6(void);
 void auton7(void);
-void lift12(void);
 
 void testAuton(void);
 

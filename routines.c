@@ -2,124 +2,32 @@
  * Implementable Strategies for Autonomous Control
  ******************************************************************************/
 
-/**
- * autonomous strategy # 0
- * Start robot in short pole square
- * robot will push cube up and onto the short post
+/*
+ * Basic commands:
+ * setBase(forward, right, spin)	Positive = forward, right, or clockwise
+ * setLift(distance)				Positive = up
+ * setShuttle(direction)			1 = out, -1 = in
+ * go()								Required at the end of any step involving any of the previous three
+ * setClaw(direction)				1 = closed, -1 = open
  */
 
 void testAuton()
 {
-	setBase(400,0,0);
-	go();
-}
-
-void auton0()
-{
-	//lift
-	setBase (0,0,0);
-	setLift (6);	//update
-	go ();
-
-	//down 
-	setBase (0,0,0);
-	setLift (-6);	//update
-	go ();
-}
-
-/**
- * [autonomous or programming skills] strategy # 0
- * Start robot in red skyrise square, facing the auto-loader
- * [basic description]
- */
-
-void auton1()
-{
-	//preload
-	setBase (0,-3,0);
-	setLift (0);
-	go ();
-
-	//back to start
-	setBase (0,3,0);
-	setLift (0);
-	go ();
-
-	//forward shuttle
-	setBase (0,0,0);
-	setLift (0);
-	setShuttle (1);
-	go ();
-
-	//grab
-	setBase (0,0,0);
-	setLift (0);
-	setShuttle (0);
-	setClaw (-1);
-	go ();
-
-	//lift
-	setBase (0,0,0);
-	setLift (7);
-	go ();
-
-	//spin counterclockwise
-	setBase (0,0,-90);
-	setLift (0);
-	go ();
-
-	//lower
-	setBase (0,0,0);
-	setLift (-23);
-	go ();
-
-	//drop
-	setBase (0,0,0);
-	setLift (0);
-	setClaw (1);
-	go ();
-}
-
-/**
- * [autonomous or programming skills] strategy # 0
- * Start robot in either square, any direction
- * Robot will lift 12 inches and do a three-sixty
- */
-
-void auton2()
-{
-	//drive forward 24"
-	setBase(-100,0,0);
-	go();
-
-	//drive forward 24"
-	setBase(100,0,0);
-	go();
-
-/*	//drive diagonally
-	setBase(24,24,0);
-	go();
-
-	setBase(-8,-20,0);
-	go();
-
-	//shuttle out
 	setShuttle(1);
 	go();
 
-	//shuttle out
-	setShuttle(-1);
-	go();
+	vexSleep(1000);
 
-	//lift up 48"
-	setLift(48);
+	setBase(400,0,0);
 	go();
-*/}
+	
+	vexSleep(1000);
+
+	setBase(-400,0,0);
+	go();
+}
 
 /*
-//Basic commands setBase(forward, right, spin) setLift(distance, speed) setShuttle() setClaw() go()
-//Sign of distance determines direction, speed should always be positive
-
 //Auton Strategy #1: Skyrise and cubes
 //Start robot in ___ square, facing ___.
 void auton0()
@@ -249,154 +157,425 @@ void auton0()
 	setLift(35);
 	go();
 }
-
-//Programming Skills strategy #1: ___
-//Start robot in ___ square, facing ___.
-void auton1()
-{
-	//Skills Strat 1
-	//push cube onto skyrise base
-	setBase(0,2,0);
-	setLift(0);
-	go();
-	//Onward!!
-	setBase(136,0,0);
-	setLift(0);
-	go();
-	//left
-	setBase(0,-20,0);
-	setLift(0);
-	go();
-	//right
-	setBase(0,40,0);
-	setLift(0);
-	go();
-}
+*/
 
 //
-//Start robot in left square, facing in
-void auton2()
+//Start in red skyrise square, facing auto-loader
+void auton0()
 {
-	//Nudge preload onto skyrise base (right)
-	setBase(0,6,0);
+	//Nudge preload
+	setBase(12,-12,0);
 	go();
-	//Move away in order to get a point for the preload cube (forward + left)
-	//setBase(6,-6,0);
-	//go();
-}
-
-*/
-//Start robot in red skyrise square, facing skyrise
-void auton3()
-{
-	setClaw(-1);
-	setShuttle(1);
-	go();
-
-	setClaw(1);
-	vexSleep(400);
-
-	setLift(900);
-	go();
-	vexSleep(500);
-
-	setBase(0, 0, -295);
-	go();
-	vexSleep(700);
-
-	// setBase(30,0,0);
-	// go();
-	// vexSleep(500);
-
-	setLift(-700);
-	go();
-
-	setClaw(-1);
 	vexSleep(300);
 
-	setShuttle(-1);
-	go();
-}
-
-//
-//Start robot in blue skyrise square, facing skyrise.
-void auton4()
-{
+	//Open claw, reach for peg
 	setClaw(-1);
 	setShuttle(1);
 	go();
+	vexSleep(300);
 
+	//Grab peg
 	setClaw(1);
-	vexSleep(400);
+	vexSleep(300);
 
-	setLift(1200);
+	//Lift peg out of auto-loader
+	setLift(950);
 	go();
-	vexSleep(500);
+	vexSleep(300);
 
-	setBase(0, 0, 290);
+	//Turn counter-clockwise to land over base
+	setBase(0,0,-280);
 	go();
-	vexSleep(700);
+	vexSleep(300);
 
-	// setBase(15,0,0);
-	// go();
-	// vexSleep(500);
-
-	setLift(-900);
+	//Lower peg
+	setLift(-750);
 	go();
-
-	setClaw(-1);
 	vexSleep(300);
 	
+	//Drop peg
+	setClaw(-1);
+	vexSleep(300);
+
+	//12-point only
+	//	|	|	|
+	//	V	V	V
+	
+	//Turn back around and retract shuttle
+	setBase(0,0,280);
+	setShuttle(-1);
+	go();
+	vexSleep(300);
+
+	//Reach for new peg
+	setShuttle(1);
+	go();
+	vexSleep(300);
+
+	//Grab peg
+	setClaw(1);
+	vexSleep(300);
+
+	//Lift peg out of auto-loader
+	setLift(1000);
+	go();
+	vexSleep(300);
+
+	//Turn counter-clockwise to land over base, lift peg a bit higher?
+	setBase(0,0,-265);
+	//setLift(500);
+	go();
+	vexSleep(300);
+
+	//Lower peg
+	setLift(-800);
+	go();
+	vexSleep(300);
+
+	//Drop peg
+	setClaw(-1);
+	vexSleep(300);
+
+	//	A	A	A
+	//	|	|	|
+	//12-point only
+
+	//Back off (both 8- and 12-point)
 	setShuttle(-1);
 	go();
 }
 
-//Start in blue low post square facing between short post and skyrise
-void auton5()
+//
+//Start in blue skyrise square, facing auto-loader
+void auton1()
 {
-	setLift(2000);
+	//Nudge preload
+	setBase(12,12,0);
 	go();
-	vexSleep(400);
+	vexSleep(300);
 
-	setBase(0,0,152);
+	//Open claw, reach for peg
+	setClaw(-1);
+	setShuttle(1);
+	go();
+	vexSleep(300);
+
+	//Grab peg
+	setClaw(1);
+	vexSleep(300);
+
+	//Lift peg out of auto-loader
+	setLift(950);
+	go();
+	vexSleep(300);
+
+	//Turn clockwise to land over base
+	setBase(0,0,280);
+	go();
+	vexSleep(300);
+
+	//Lower peg
+	setLift(-750);
+	go();
+	vexSleep(300);
+	
+	//Drop peg
+	setClaw(-1);
+	vexSleep(300);
+
+	//12-point only
+	//	|	|	|
+	//	V	V	V
+	
+	//Turn back around and retract shuttle
+	setBase(0,0,-280);
+	setShuttle(-1);
+	go();
+	vexSleep(300);
+
+	//Reach for new peg
+	setShuttle(1);
+	go();
+	vexSleep(300);
+
+	//Grab peg
+	setClaw(1);
+	vexSleep(300);
+
+	//Lift peg out of auto-loader
+	setLift(1000);
+	go();
+	vexSleep(300);
+
+	//Turn clockwise to land over base, lift peg a bit higher?
+	setBase(0,0,265);
+	//setLift(500);
+	go();
+	vexSleep(300);
+
+	//Lower peg
+	setLift(-800);
+	go();
+	vexSleep(300);
+
+	//Drop peg
+	setClaw(-1);
+	//vexSleep(300);
+
+	//	A	A	A
+	//	|	|	|
+	//12-point only
+
+	//Back off (both 8- and 12-point)
+	setShuttle(-1);
 	go();
 
-	setLift(-1700);
-	go();
-	vexSleep(400);
-
-	setBase(-500,0,0);
+	//Really back off
+	setBase(-15,15,0);
 	go();
 
 }
 
 //Start in red low post square facing between short post and skyrise
-void auton6()
+void auton2()
 {
+	//Lift preload cube to top of low post
 	setLift(2000);
 	go();
-	vexSleep(400);
+	vexSleep(300);
 
-	setBase(0,0,-152);
+	//Turn to land above low post
+	setBase(0,0,-130);
 	go();
+	vexSleep(300);
 
+	//Move forward
+	setBase(50,0,0);
+	go();
+	vexSleep(300);
+
+	//Lift cube down onto post
 	setLift(-1700);
 	go();
-	vexSleep(400);
+	vexSleep(300);
 
-	setBase(-500,0,0);
+	/*
+	//4-point only
+	//	|	|	|
+	//	V	V	V
+	
+	//Back up
+	setBase(-50,0,0);
+	go();
+	vexSleep(300);
+
+	//Turn back to face red cube
+	setBase(0,0,-420);
+	go();
+	vexSleep(300);
+
+	//Move forward to red cube and put lift back down
+	setBase(400,0,0);
+	setLift(-290);
+	go();
+	vexSleep(300);
+
+	//Pick up cube
+	setLift(300);
+	go();
+	vexSleep(300);
+
+	//Turn around
+	setBase(0,0,660);
+	go();
+	vexSleep(300);
+
+	//Drive back to tile to drop off cube
+	setBase(500,0,0);
+	go();
+	vexSleep(300);
+
+	//Set cube down
+	setLift(-290);
+	go();
+	vexSleep(300);
+
+	//	A	A	A
+	//	|	|	|
+	//4-point only
+	*/
+
+	//Back off (both 3- and 4-point)
+	setBase(-150,0,0);
 	go();
 }
 
-//
-//Start robot in ___ square, facing ___.
-void auton7()
+//Start in blue low post square facing between short post and skyrise
+void auton3()
+{
+	setLift(2000);
+	go();
+	vexSleep(300);
+
+	setBase(0,0,120);
+	go();
+	vexSleep(300);
+
+	setBase(60,0,0);
+	go();
+	vexSleep(300);
+
+	setLift(-1700);
+	go();
+	vexSleep(300);
+
+	setBase(-150,0,0);
+	go();
+}
+
+//Start in ___ square, facing ___
+void auton4()
+{
+	auton0();
+
+	//Turn back for 3rd peg
+	setBase(0,0,280);
+	setShuttle(-1);
+	go();
+	vexSleep(300);
+
+	//Reach for new peg
+	setShuttle(1);
+	go();
+	vexSleep(300);
+
+	//Grab peg
+	setClaw(1);
+	vexSleep(300);
+
+	//Lift peg out of auto-loader
+	setLift(1500);
+	go();
+	vexSleep(300);
+
+	//Turn counter-clockwise to land over base, lift peg a bit higher?
+	setBase(0,0,-265);
+	//setLift(500);
+	go();
+	vexSleep(300);
+
+	//Lower peg
+	setLift(-1000);
+	go();
+	vexSleep(300);
+
+	//Drop peg
+	setClaw(-1);
+	vexSleep(300);
+
+	//Back off
+	setShuttle(-1);
+	go();
+
+	//4th peg
+
+	//Turn back and lower for new peg
+	setBase(0,0,280);
+	setLift(-500);
+	setShuttle(-1);
+	go();
+	vexSleep(300);
+
+	//Reach for new peg
+	setShuttle(1);
+	go();
+	vexSleep(300);
+
+	//Grab peg
+	setClaw(1);
+	vexSleep(300);
+
+	//Lift peg out of auto-loader
+	setLift(1500);
+	go();
+	vexSleep(300);
+
+	//Turn counter-clockwise to land over base, lift peg a bit higher
+	setBase(0,0,-265);
+	setLift(500);
+	go();
+	vexSleep(300);
+
+	//Lower peg
+	setLift(-900);
+	go();
+	vexSleep(300);
+
+	//Drop peg
+	setClaw(-1);
+	vexSleep(300);
+
+	//Back off
+	setShuttle(-1);
+	go();
+
+	//5th peg
+
+	//Turn back and lower for new peg
+	setBase(0,0,280);
+	setLift(-1500);
+	setShuttle(-1);
+	go();
+	vexSleep(300);
+
+	//Reach for new peg
+	setShuttle(1);
+	go();
+	vexSleep(300);
+
+	//Grab peg
+	setClaw(1);
+	vexSleep(300);
+
+	//Lift peg out of auto-loader
+	setLift(1000);
+	go();
+	vexSleep(300);
+
+	//Turn counter-clockwise to land over base, lift peg a bit higher
+	setBase(0,0,-265);
+	setLift(2000);
+	go();
+	vexSleep(300);
+
+	//Lower peg
+	setLift(-1000);
+	go();
+	vexSleep(300);
+
+	//Drop peg
+	setClaw(-1);
+	vexSleep(300);
+
+	//Back off
+	setShuttle(-1);
+	go();
+}
+
+//Start in ___ square, facing ___
+void auton5()
 {
 	
 }
 
-//lift 12"
-void lift12()
+//Start in ___ square, facing ___
+void auton6()
 {
-	setLift(12);
+	
+}
+
+//Start in ___ square, facing ___
+void auton7()
+{
+	
 }
