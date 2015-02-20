@@ -270,11 +270,11 @@ void updateInput(void)
     //Sets precision coefficients based on user input
     if(vexControllerGet(Btn6D))
     {
-        verticalCoefficient = horizontalCoefficient = spinCoefficient = liftCoefficient = precisionConstant;
+        verticalCoefficient = horizontalCoefficient = spinCoefficient = liftCoefficient = shuttleCoefficient = precisionConstant;
     }
     else
     {
-        verticalCoefficient = horizontalCoefficient = spinCoefficient = liftCoefficient = 1;
+        verticalCoefficient = horizontalCoefficient = spinCoefficient = liftCoefficient = shuttleCoefficient = 1;
     }
 
     //Adjusts the motor values to be proportional to the acceleration of the joystick
@@ -366,11 +366,11 @@ void setShuttleMotors(bool in, bool out, bool back, bool front)
 {
     if(in && front)
     {
-        vexMotorSet(SHUTTLE, 127);
+        vexMotorSet(SHUTTLE, 127 * shuttleCoefficient);
     }
     else if(out && back)
     {
-        vexMotorSet(SHUTTLE, -127);
+        vexMotorSet(SHUTTLE, -127 * shuttleCoefficient);
     }
     else
     {
@@ -430,7 +430,7 @@ void go(void)
         //Call autonomous motor functions
         if(!driveDone) driveControl();
         if(!liftDone) liftControl();
-        if(!shuttleDone) shuttleControl(count++);
+        if(!shuttleDone) shuttleControl(!vexDigitalPinGet(BACK_BUTTON), !vexDigitalPinGet(FRONT_BUTTON));
 
         //Determine whether everything is complete
         if(driveDone && liftDone && shuttleDone)
@@ -532,9 +532,9 @@ void liftControl()
 }
 
 //pushes the shuttle in, out, or not at all
-void shuttleControl(int count)
+void shuttleControl(bool backButton, bool frontButton)
 {
-    if(count > autonShuttlingCounts || autonShuttleDirection == 0)
+    if((autonShuttleDirection == 1 && frontButton == 1) || (autonShuttleDirection == -1 && backButton == 1) || (autonShuttleDirection == 0))
     {
         vexMotorSet(SHUTTLE, 0);
         shuttleDone = true;
