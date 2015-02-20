@@ -236,8 +236,8 @@ msg_t vexOperator(void *arg)
         setLiftMotors(liftSpeed);
 
         //Shuttle
-        shuttleIn = vexControllerGet(Btn5U);
-        shuttleOut = vexControllerGet(Btn5D);
+        shuttleIn = vexControllerGet(Btn5D);
+        shuttleOut = vexControllerGet(Btn5U);
         shuttleReachedBack = vexDigitalPinGet(BACK_BUTTON);
         shuttleReachedFront = vexDigitalPinGet(FRONT_BUTTON);
 
@@ -291,13 +291,13 @@ void updateInput(void)
     liftSpeed = liftCoefficient * 127 * (vexControllerGet(Btn8U) - vexControllerGet(Btn8D));
 
     //Test Auton Functions
-    /*
-    if(vexControllerGet(Btn7R)) auton3();
-    if(vexControllerGet(Btn7L)) auton4();
-    if(vexControllerGet(Btn8L)) auton5();
-    if(vexControllerGet(Btn8R)) auton6();
-    */
-    if(vexControllerGet(Btn7U)) testAuton();
+    
+    if(vexControllerGet(Btn7R)) auton0();   //Red skyrise
+    if(vexControllerGet(Btn7L)) auton1();   //Blue skyrise
+    if(vexControllerGet(Btn8R)) auton2();   //Red post
+    if(vexControllerGet(Btn8L)) auton3();   //Blue post
+    
+    if(vexControllerGet(Btn7U)) auton4();
 }
 
 /*
