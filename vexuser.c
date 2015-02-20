@@ -444,32 +444,6 @@ void driveControl()
     float proportion = getAverageComplete();
 
     //ADJUST base speed cap for acceleration and decceleration
-    /*
-    if(baseSpeedCap < 127)
-    {
-        baseSpeedCap += accelerationIncrement;
-
-        if(baseSpeedCap >= 127)
-        {
-            accelerationIncrement = 0;
-            accelerationRatio = 1 - getAverageComplete();
-        }
-        else if(baseSpeedCap <= minimumSpeedCap)
-        {
-            accelerationIncrement = 0;
-        }
-    }
-    if(getAverageComplete() >= accelerationRatio)
-    {
-        accelerationIncrement = -1;
-        if(baseSpeedCap == 127) baseSpeedCap = 126;
-
-    }*/
-
-    //Adjusts the maximum speed cap to control the acceleration and decceleration 
-    float niceLittleShape = averageProportionComplete(-1) * (1 - averageProportionComplete(-1)) * 4;    //If we are near the beginning or end of the step, this value is very small.
-    baseSpeedCap = minimumSpeed + niceLittleShape * (127 - minimumSpeed);   //Stretch between the minimum and maximum speeds
-
     int i;
     for(i = 0; i < 4; i++)
     {
