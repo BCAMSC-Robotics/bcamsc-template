@@ -108,7 +108,7 @@ int maxAHoriz = 10;
 int maxASpin = 10;
 
 //Multipliers for precision control
-float horizontalCoefficient, spinCoefficient, verticalCoefficient, liftCoefficient;
+float horizontalCoefficient, spinCoefficient, verticalCoefficient, liftCoefficient, shuttleCoefficient;
 
 //Auton Segments
 int autonSelect;    //Uses jumpers to select an auton routine
@@ -120,6 +120,10 @@ int clawPosition = 0;       //0 = open, 1 = closed
 int shuttlePosition = 0;    //0 = in, 1 = out
 int shuttlingTime = 150;    //This is the number of cycles through the while loop in go() that it takes to toggle the position of the shuttle. EDIT THIS
 
+int accelerationIncrement = 1;
+int minimumSpeedCap = 35;
+int accelerationRatio;
+
 //Autonomous Control Variables
 bool driveDone = false;
 bool liftDone = false;
@@ -130,36 +134,35 @@ bool clawTogglePrevious = false;
 
 //Autonomous Constants
 int autonLiftHeight = 0;
-const int autonShuttlingCounts = 1500000;
+const int autonShuttlingCounts = 500000;
 int autonShuttleDirection = 0;
 const float driveCountsPerInch = 1;//11.05;
 const int liftCountsPerInch = 1;//25;
 
-const int minimumSpeed = 30;
+const float maximumSpeed = 127;
+const float minimumSpeed = 25;
 
 int motorPorts[] = {BASE_SW, BASE_NW, BASE_NE, BASE_SE};
 int baseDistances[] = {0,0,0,0};
 float baseSpeeds[] = {0,0,0,0};
-float baseSpeedCap = 30;
+float baseSpeedCap = 20;
 const float straighteningAdjustment = 1.05;
 
 const unsigned int STRAIGHTENED_VALUES[128] = 
 {
-     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 
-    21, 21, 22, 22, 22, 23, 24, 24, 25, 
-    25, 25, 25, 26, 27, 27, 28, 28, 28, 
-    28, 29, 30, 30, 30, 31, 31, 
-    32, 32, 32, 33, 33, 34, 34, 35, 
-    35, 35, 36, 36, 37, 37, 37, 37, 38, 38,
-    39, 39, 39, 40, 40, 41, 41, 42, 42,
-    43, 44, 44, 45, 45, 46, 46, 47, 47,
-    48, 48, 49, 50, 50, 51, 52, 52, 53,
-    54, 55, 56, 57, 57, 58, 59, 60, 61,
-    62, 63, 64, 65, 66, 67, 67, 68, 70,
-    71, 72, 72, 73, 74, 76, 77, 78, 79,
-    79, 80, 81, 83, 84, 84, 86, 86, 87,
-    87, 88, 88, 89, 89, 90, 127, 127,
-    127, 127
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    2,  4,  6,  8,  10, 12, 14, 14, 14, 14,
+    14, 14, 15, 15, 15, 15, 15, 15, 16, 16,
+    16, 16, 16, 16, 17, 17, 17, 17, 17, 17,
+    18, 18, 18, 18, 18, 18, 19, 19, 19, 19,
+    19, 19, 20, 20, 20, 20, 21, 21, 21, 21,
+    22, 22, 22, 22, 23, 23, 23, 23, 24, 24,
+    24, 24, 25, 25, 25, 26, 26, 26, 27, 27,
+    28, 28, 29, 29, 30, 30, 31, 31, 32, 32,
+    33, 33, 34, 34, 35, 35, 36, 36, 37, 37,
+    38, 38, 40, 41, 42, 43, 44, 45, 47, 48,
+    50, 52, 54, 56, 58, 60, 63, 67, 71, 76,
+    81, 87, 93, 100,107,117,127,127
 };
 
 /**
