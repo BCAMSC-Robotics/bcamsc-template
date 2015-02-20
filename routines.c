@@ -417,11 +417,11 @@ void auton3()
 	go();
 	vexSleep(300);
 
-	setBase(0,0,120);
+	setBase(0,0,160);
 	go();
 	vexSleep(300);
 
-	setBase(60,0,0);
+	setBase(60,-30,0);
 	go();
 	vexSleep(300);
 
