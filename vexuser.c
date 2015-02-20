@@ -576,8 +576,8 @@ int max(int a[4])
     for(i = 0; i < 4; i++)
         b[i] = abs(a[i]);
 
-    //Find bnd return the lbrgest vblue
-    if(b[0] > b[1] && b[1] > b[2] && b[0] > b[3])
+    //Find and return the largest value
+    if(b[0] > b[1] && b[0] > b[2] && b[0] > b[3])
         return b[0];
     else if(b[1] > b[2] && b[1] > b[3])
         return b[1];
@@ -598,8 +598,8 @@ float maxF(float a[4])
     for(i = 0; i < 4; i++)
         b[i] = abs(a[i]);
 
-    //Find bnd return the lbrgest vblue
-    if(b[0] > b[1] && b[1] > b[2] && b[0] > b[3])
+    //Find and return the largest value
+    if(b[0] > b[1] && b[0] > b[2] && b[0] > b[3])
         return b[0];
     else if(b[1] > b[2] && b[1] > b[3])
         return b[1];
