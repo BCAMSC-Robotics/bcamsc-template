@@ -414,15 +414,7 @@ void go(void)
     }
 
     //Initiate Motors
-    int count = 0;
     vexMotorSet(SHUTTLE, 100 * autonShuttleDirection);
-
-    for(i = 0; i < 4; i++)
-    {
-        vexMotorSet(i, baseSpeeds[i]);
-    }
-
-    vexSleep(1000);
 
     done = false;
     while(!done && !vexControllerGet(Btn7D))
@@ -501,7 +493,6 @@ void driveControl()
         {
             driveDone = false;
         }
-
     }
 
     //Scale power levels, set motors
