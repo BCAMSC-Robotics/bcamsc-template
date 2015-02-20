@@ -31,81 +31,100 @@ int getPowerIncrement(int oldValue, int input, int maxAcceleration, float coeffi
 void updateInput(void);
 
 /**
- * This function sets all the motors for driver control based.
+ * This function autonomously controls the robot for given direction and distance.
  * 
  * @author Michel Momeyer <strihawk1213@gmail.com>
  * @since 2014-12-29
  */
-void setMotors(void);
-
-/**
- * This function drives forward a certain distance autonomously.
- *
- * @author Michel Momeyer <strihawk1213@gmail.com>
- * @since 2015-01-10
- * @param dist[in]
- *     the distance to travel in feet
- * @param dist[in]
- *     the distance to travel in feet
- */
- void setAutonMotor(int motor, int dist, int speed);
-
- /**
-  * Determines whether the given motor has reached the given distance converted to encoder counts using wheelFactor.
-  * 
-  * other stuff
-  * 
-  */
-bool motorIsFinishedOrStopped(int motor, int distance);	//formerly motorHasReached
-
-/**
- * Drives robot forward
- */
-void forward(int distance, int speed);
-
-/**
- * This function autonomously controls the robot for given direction and distance.
- */
 void go(void);
 
 /**
- * Functions to operate the three main parts of the robot - the base, lift, and shuttle
+ * Operates the base during autonomous.
+ * 
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @since 2014-12-29
  */
 void driveControl(void);
 
+/**
+ * Operates the lift during autonomous.
+ *
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @since 2014-12-29
+ */
 void liftControl(void);
 
+/**
+ * Operates the shuttle during autonomous.
+ *
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @since 2014-12-29
+ * @param backButton[in]
+ * 		the back bumper that controls the shuttle
+ * @param frontButton[in]
+ *		the front bumper that controls the shuttle
+ */
 void shuttleControl(bool backButton, bool frontButton);
-
-/**
- * This function straightens the motor to ensure that it sticks to the plan. 
- */
-//int getStraightenedPowerLevel(int encoderCount, int previousEncoderCount, int powerLevel);
-
-/**
- * This function puts new values in powerLevels.
- */
-//void setPowerLevels(int value1, int value2, int value3, int value4, int value5, int value6, int value7, int value8, int value9, int value10);
-
-/**
- * This function puts new values in distances.
- */
-//void setDistances(int value1, int value2, int value3, int value4, int value5, int value6, int value7, int value8, int value9, int value10);
 
 /*
  * These functions make it more intuitive to edit the distances and powerLevels arrays for use in the go() function.
  */
+
+/**
+ * This functions sets the base drive values for the robot to reach in the next go() call.
+ * 
+ * @author Liam Bohl
+ * @since 2014-12-29
+ * @param forward[in]
+ *		distance in encoder counts to travel vertically (or forward)
+ * @param right[in]
+ *		distance in encoder counts to travel horizontally (or right)
+ * @param spin[in]
+ *		distance in encoder counts to rotate (or spin)
+ */
 void setBase(int forward, int right, int spin);
 
+/**
+ * This functions sets the base drive values for the robot to reach in the next go() call.
+ * 
+ * @author Liam Bohl
+ * @since 2014-12-29
+ * @param distance
+ * 		distance in encoder counts to raise or lower the lift
+ */
 void setLift(int distance);
 
 //direction 1 sets the shuttle forward, -1 backward, and 0 stationary.
+/**
+ * This function sets the shuttle direction to travel.
+ * 
+ * @author Liam Bohl
+ * @since 2014-12-29
+ * @param direction[in]
+ * 		direction that the shuttle travels 
+ *		0 : stationary
+ *		1 : forward
+ *	   -1 : backwards
+ */
 void setShuttle(int direction);
 
+/**
+ * This function sets the claw to open[1] or close[-1].
+ * 
+ * @author Liam Bohl
+ * @since 2014-12-29
+ * @param x[in]
+ * 		direction to open claw 
+ *		1: open
+ *	   -1: closed
+ */
 void setClaw(int x);
 
 /*
- * returns the largest value in an array of ints
+ * This function returns the largest value in a given array of integers.
+ *
+ * @author Liam Bohl
+ * @since 2015-
  */
 int max(int a[]);
 
