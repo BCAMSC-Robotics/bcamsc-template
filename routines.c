@@ -344,8 +344,8 @@ void auton2()
 	go();
 	vexSleep(300);
 
-	//Turn to land above low post
-	setBase(0,0,-130);
+	//Turn to slightly overshoot the low post
+	setBase(0,0,-170);
 	go();
 	vexSleep(300);
 
