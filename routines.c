@@ -349,8 +349,8 @@ void auton2()
 	go();
 	vexSleep(300);
 
-	//Move forward
-	setBase(50,0,0);
+	//Orient above the post
+	setBase(0,40,0);
 	go();
 	vexSleep(300);
 
