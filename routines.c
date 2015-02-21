@@ -159,9 +159,9 @@ void auton0()
 }
 */
 
-//
+//Red skyrise auton
 //Start in red skyrise square, facing auto-loader
-void auton0()
+void autonRedSkyrise()
 {
 	//Nudge preload
 	setBase(12,-12,0);
@@ -245,9 +245,9 @@ void auton0()
 	go();
 }
 
-//
+//Blue skyrise auton
 //Start in blue skyrise square, facing auto-loader
-void auton1()
+void autonBlueSkyrise()
 {
 	//Nudge preload
 	setBase(12,12,0);
@@ -336,8 +336,9 @@ void auton1()
 
 }
 
-//Start in red low post square facing between short post and skyrise
-void auton2()
+//Red low post auton
+//Start in red low post square facing, between short post and skyrise
+void autonRedPost()
 {
 	//Lift preload cube to top of low post
 	setLift(2000);
@@ -410,8 +411,9 @@ void auton2()
 	go();
 }
 
-//Start in blue low post square facing between short post and skyrise
-void auton3()
+//Blue low post auton
+//Start in blue low post square, facing between short post and skyrise
+void autonBluePost()
 {
 	setLift(2000);
 	go();
@@ -433,10 +435,11 @@ void auton3()
 	go();
 }
 
-//Start in red skyrise square, facing auto loader
-void auton4()
+//Programming skills challenge routine
+//Start in red skyrise square, facing auto-loader
+void programmingSkills()
 {
-	auton0();
+	autonRedSkyrise();
 
 	//Turn back for 3rd peg
 	setBase(0,0,280);
@@ -565,22 +568,4 @@ void auton4()
 	//Back off
 	setShuttle(-1);
 	go();
-}
-
-//Start in ___ square, facing ___
-void auton5()
-{
-	
-}
-
-//Start in ___ square, facing ___
-void auton6()
-{
-	
-}
-
-//Start in ___ square, facing ___
-void auton7()
-{
-	
 }

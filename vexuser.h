@@ -166,14 +166,11 @@ float prop(int index);
 /**
  * These functions are responsible for all autonomous and programming skills strategies.
  */
-void auton0(void);
-void auton1(void);
-void auton2(void);
-void auton3(void);
-void auton4(void);
-void auton5(void);
-void auton6(void);
-void auton7(void);
+void autonRedSkyrise(void);
+void autonBlueSkyrise(void);
+void autonRedPost(void);
+void autonBluePost(void);
+void programmingSkills(void);
 
 void testAuton(void);
 
