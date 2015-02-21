@@ -164,14 +164,58 @@ float prop(int index);
 //int sign(int x);
 
 /**
- * These functions are responsible for all autonomous and programming skills strategies.
+ * The robot knocks the preload cube onto the red skyrise base and places two skyrise sections on the base.
+ *		Scores 12 points when executed perfectly.
+ *
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @author Faith Bosher
+ * @since 2015-1-?
  */
 void autonRedSkyrise(void);
+
+/**
+ * The robot knocks the preload cube onto the blue skyrise base and places two skyrise sections on the base.
+ *		Scores 12 points when executed perfectly.
+ *
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @author Faith Bosher
+ * @since 2015-1-?
+ */
 void autonBlueSkyrise(void);
+
+/**
+ * The robot lifts the preload cube onto the low post adjacent to the starting tile and backs away.
+ *		Scores 3 points when executed perfectly.
+ *
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @since 2015-1-?
+ */
 void autonRedPost(void);
+
+/**
+ * The robot lifts the preload cube onto the low post adjacent to the starting tile and backs away.
+ *		Scores 3 points when executed perfectly.
+ *
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @since 2015-1-?
+ */
 void autonBluePost(void);
+
+/**
+ * The robot knocks the preload cube onto the blue skyrise base and places five skyrise sections on the base.
+ *		Scores 24 points when executed perfectly.
+ *
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @since 2015-2-19
+ */
 void programmingSkills(void);
 
+/**
+ * This function serves to test the autonomous code.
+ *
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @since ?
+ */
 void testAuton(void);
 
 int cap(int x, int lBound, int uBound);
