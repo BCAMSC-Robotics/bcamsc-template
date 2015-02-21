@@ -433,7 +433,7 @@ void auton3()
 	go();
 }
 
-//Start in ___ square, facing ___
+//Start in red skyrise square, facing auto loader
 void auton4()
 {
 	auton0();
@@ -454,13 +454,13 @@ void auton4()
 	vexSleep(300);
 
 	//Lift peg out of auto-loader
-	setLift(1500);
+	setLift(1000);
 	go();
 	vexSleep(300);
 
-	//Turn counter-clockwise to land over base, lift peg a bit higher?
-	setBase(0,0,-265);
-	//setLift(500);
+	//Turn counter-clockwise to land over base, lift peg a bit higher
+	setBase(0,0,-280);
+	setLift(500);
 	go();
 	vexSleep(300);
 
@@ -501,7 +501,7 @@ void auton4()
 	vexSleep(300);
 
 	//Turn counter-clockwise to land over base, lift peg a bit higher
-	setBase(0,0,-265);
+	setBase(0,0,-280);
 	setLift(500);
 	go();
 	vexSleep(300);
@@ -523,7 +523,7 @@ void auton4()
 
 	//Turn back and lower for new peg
 	setBase(0,0,280);
-	setLift(-1500);
+	setLift(-1100);
 	setShuttle(-1);
 	go();
 	vexSleep(300);
@@ -538,13 +538,18 @@ void auton4()
 	vexSleep(300);
 
 	//Lift peg out of auto-loader
-	setLift(1000);
+	setLift(2300);
 	go();
 	vexSleep(300);
 
 	//Turn counter-clockwise to land over base, lift peg a bit higher
-	setBase(0,0,-265);
-	setLift(2000);
+	setBase(0,0,-300);
+	setLift(500);
+	go();
+	vexSleep(800);
+
+	//Back up to adjust
+	setBase(-15,0,0);
 	go();
 	vexSleep(300);
 
