@@ -219,14 +219,102 @@ void programmingSkills(void);
 void testAuton(void);
 
 int cap(int x, int lBound, int uBound);
+/**
+ * This function takes an input from the joystick and makes it zero if it is within the dead zone.
+ *
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @since 2015-1-?
+ *
+ * @param value[in]
+ *		the value taken from the joystick
+ * @return
+ *		the value adjusted to account for the dead zone
+ */
 int deadZoneAdjust(int value);
+
+/**
+ * This function returns the sign (positive or negative) of and integer.
+ *
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @since 2015-1-?
+ *
+ * @param x[in]
+ *		the value for which the sign is to be taken
+ * @return
+ *		1 or -1, depending on the sign of x
+ */
 int signOf(int x);
 
+/**
+ * The following four functions use the inputs determined in updateInput() to set the robot's various motors.
+ */
+
+/**
+ * This function sets the power levels of the base motors
+ *
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @since 2015-2-?
+ *
+ * @param spin[in]
+ *		speed to turn clockwise (positive) or counter-clockwise (negative)
+ * @param vertical[in]
+ *		speed to move forward (positive) or backward (negative)
+ * @param horizontal[in]
+ *		speed to move right (positive) or left (negative)
+ */
 void setBaseMotors(int spin, int vertical, int horizontal);
+
+/**
+ * This function sets the power levels of the lift motors
+ *
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @since 2015-2-?
+ *
+ * @param liftSpeed
+ *		speed to move lift up (positive) or down (negative)
+ */
 void setLiftMotors(int liftSpeed);
+
+/**
+ * This function sets the power level of the shuttle motor
+ *
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @since 2015-2-?
+ *
+ * @param in[in]
+ *		is the "in" button pressed?
+ * @param out[in]
+ *		is the "out" button pressed?
+ * @param back[in]
+ *		is the back bumper switch depressed?
+ * @param front[in]
+ *		is the front bumper switch depressed?
+ */
 void setShuttleMotors(bool in, bool out, bool back, bool front);
+
+/**
+ * This function sets the position of the claw motor
+ *
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @since 2015-2-?
+ *
+ * @param buttonPressed[in]
+ *		is the claw button pressed?
+ */
 void setClawMotors(bool buttonPressed);
 
+/**
+ * This function takes input from one joystick channel and adjusts it to give more precise control of speed.
+ *
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @since 2015-2-?
+ * 
+ * @param input[in]
+ *		the value of the joystick channel to be adjusted
+ * @return
+ *		the adjusted value
+ */
 int joystickAcceleration(int input);
 
 /*
