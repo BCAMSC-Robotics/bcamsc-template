@@ -133,7 +133,7 @@ void setClaw(int x);
  * @since 2015-1-?
  *
  * @param a[in]
- *		the array for which the largest value is found
+ *		the array for which the largest absolute value is found
  * @return
  *		the largest absolute value of any element in the array
  */
@@ -146,7 +146,7 @@ int max(int a[]);
  * @since 2015-1-?
  *
  * @param a[in]
- *		the array for which the largest value is found
+ *		the array for which the largest absolute value is found
  * @return
  *		the largest absolute value of any element in the array
  */
@@ -157,6 +157,11 @@ float maxF(float a[]);
  *
  * @author Liam Bohl <liambohl@gmail.com>
  * @since 2015-2-19
+ *
+ * @param a[in]
+ *		the array for which the smallest absolute value is found
+ * @return
+ *		the smallest absolute value of any element in the array
  */
 float minF(float a[]);
 
@@ -165,6 +170,11 @@ float minF(float a[]);
  *
  * @author Liam Bohl <liambohl@gmail.com>
  * @since 2015-2-19
+ *
+ * @param a[in]
+ *		the array for which the average value is found
+ * @return
+ *		the average of all elements in the array
  */
 float averageF(float a[]);
 
@@ -173,6 +183,11 @@ float averageF(float a[]);
  *
  * @author Liam Bohl <liambohl@gmail.com>
  * @since 2015-2-19
+ *
+ * @param a[in]
+ *		the array for which the length is found
+ * @return
+ *		the number of elements in the array
  */
 int length(int a[]);
 
@@ -181,6 +196,11 @@ int length(int a[]);
  *
  * @author Liam Bohl <liambohl@gmail.com>
  * @since 2015-2-19
+ *
+ * @param a[in]
+ *		the array for which the length is found
+ * @return
+ *		the number of elements in the array
  */
 float lengthF(float a[]);
 
@@ -258,7 +278,19 @@ void programmingSkills(void);
 void testAuton(void);
 
 /**
- * Makes sure that a value is within boundaries.
+ * Makes sure that a value is within a specified range. If not, returns the closest value within the range.
+ *
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @since ?
+ *
+ * @param x[in]
+ *		the value to be checked
+ * @param lBound[in]
+ *		the lowest allowable value to return
+ * @param uBound[in]
+ *		the highest allowable value to return
+ * @return
+ *		the closest value to x which liew within the range
  */
 int cap(int x, int lBound, int uBound);
 
