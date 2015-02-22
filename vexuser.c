@@ -200,8 +200,7 @@ msg_t vexAutonomous(void *arg)
     vexTaskRegister("auton");
 
     //Run the auton function
-    autonBlueSkyrise();
-
+    programmingSkills();
     return (msg_t)0;
 }
 

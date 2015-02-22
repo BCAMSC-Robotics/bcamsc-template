@@ -184,7 +184,7 @@ void autonRedSkyrise()
 	vexSleep(300);
 
 	//Turn counter-clockwise to land over base
-	setBase(0,0,-280);
+	setBase(0,0,-260);
 	go();
 	vexSleep(300);
 
@@ -202,7 +202,7 @@ void autonRedSkyrise()
 	//	V	V	V
 	
 	//Turn back around and retract shuttle
-	setBase(0,0,280);
+	setBase(0,0,260);
 	setShuttle(-1);
 	go();
 	vexSleep(300);
@@ -217,7 +217,7 @@ void autonRedSkyrise()
 	vexSleep(300);
 
 	//Lift peg out of auto-loader
-	setLift(1000);
+	setLift(1200);
 	go();
 	vexSleep(300);
 
@@ -228,7 +228,7 @@ void autonRedSkyrise()
 	vexSleep(300);
 
 	//Lower peg
-	setLift(-800);
+	setLift(-1000);
 	go();
 	vexSleep(300);
 
@@ -270,7 +270,7 @@ void autonBlueSkyrise()
 	vexSleep(300);
 
 	//Turn clockwise to land over base
-	setBase(0,0,280);
+	setBase(0,0,260);
 	go();
 	vexSleep(300);
 
@@ -288,7 +288,7 @@ void autonBlueSkyrise()
 	//	V	V	V
 	
 	//Turn back around and retract shuttle
-	setBase(0,0,-280);
+	setBase(0,0,-260);
 	setShuttle(-1);
 	go();
 	vexSleep(300);
@@ -308,7 +308,7 @@ void autonBlueSkyrise()
 	vexSleep(300);
 
 	//Turn clockwise to land over base, lift peg a bit higher?
-	setBase(0,0,265);
+	setBase(0,0,240);
 	//setLift(500);
 	go();
 	vexSleep(300);
@@ -484,7 +484,7 @@ void programmingSkills()
 
 	//Turn back and lower for new peg
 	setBase(0,0,280);
-	setLift(-500);
+	setLift(-300);
 	setShuttle(-1);
 	go();
 	vexSleep(300);
@@ -567,5 +567,12 @@ void programmingSkills()
 
 	//Back off
 	setShuttle(-1);
+	go();
+}
+
+//Back up to drop pre-load
+void autonBackUp()
+{
+	setBase(-200,0,0);
 	go();
 }

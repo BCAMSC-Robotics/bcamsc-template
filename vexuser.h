@@ -270,6 +270,11 @@ void autonBluePost(void);
 void programmingSkills(void);
 
 /**
+ *
+ */
+void autonBackUp(void);
+
+/**
  * This function serves to test the autonomous code.
  *
  * @author Michel Momeyer <strihawk1213@gmail.com>
