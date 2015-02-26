@@ -3,22 +3,22 @@
 
 /**
  * This function determines and returns an acceptable change to the given power level based
- *     base on user input.
+ *		on user input.
  * 
  * @author Liam Bohl <liambohl@gmail.com>
  * @author Michel Momeyer <strihawk1213@gmail.com>
  * @since 2014-12-29
  *
  * @param oldValue[in]
- *     the current value to be changed
- * @param channelInput[in]
- *     the user input from the controller
- * @param deadZone[in]
- *     the minimum input threshold that must be reached before changes are considered
+ *		the robot's current speed in the direction in question
+ * @param input[in]
+ *		the user input from the controller
  * @param maxAcceleration[in]
- *     the maximum change in power that can be added at an instant
+ *		the maximum change in power that can be added at an instant
+ * @param coefficient[in]
+ *		current maximum speed, determined by whether precision is on or off
  * @return 
- *     the acceptable change to the given power level
+ *		the acceptable change to the given power level
  */
 int getPowerIncrement(int oldValue, int input, int maxAcceleration, float coefficient);
 
@@ -31,146 +31,380 @@ int getPowerIncrement(int oldValue, int input, int maxAcceleration, float coeffi
 void updateInput(void);
 
 /**
- * This function sets all the motors for driver control based.
+ * This function autonomously controls the robot for given direction and distance.
  * 
  * @author Michel Momeyer <strihawk1213@gmail.com>
  * @since 2014-12-29
  */
-void setMotors(void);
-
-/**
- * This function drives forward a certain distance autonomously.
- *
- * @author Michel Momeyer <strihawk1213@gmail.com>
- * @since 2015-01-10
- * @param dist[in]
- *     the distance to travel in feet
- * @param dist[in]
- *     the distance to travel in feet
- */
- void setAutonMotor(int motor, int dist, int speed);
-
- /**
-  * Determines whether the given motor has reached the given distance converted to encoder counts using wheelFactor.
-  * 
-  * other stuff
-  * 
-  */
-bool motorIsFinishedOrStopped(int motor, int distance);	//formerly motorHasReached
-
-/**
- * Drives robot forward
- */
-void forward(int distance, int speed);
-
-/**
- * This function autonomously controls the robot for given direction and distance.
- */
 void go(void);
 
 /**
- * Functions to operate the three main parts of the robot - the base, lift, and shuttle
+ * Operates the base during autonomous.
+ * 
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @since 2014-12-29
  */
 void driveControl(void);
 
+/**
+ * Operates the lift during autonomous.
+ *
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @since 2014-12-29
+ */
 void liftControl(void);
 
+/**
+ * Operates the shuttle during autonomous.
+ *
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @since 2014-12-29
+ *
+ * @param backButton[in]
+ * 		the back bumper that controls the shuttle
+ * @param frontButton[in]
+ *		the front bumper that controls the shuttle
+ */
 void shuttleControl(bool backButton, bool frontButton);
 
 /**
- * This function straightens the motor to ensure that it sticks to the plan. 
+ * The following 3 functions make it more intuitive to edit the variables used in the go() function,
+ *		namely determining the speed and distance each motor should move.
  */
-//int getStraightenedPowerLevel(int encoderCount, int previousEncoderCount, int powerLevel);
 
 /**
- * This function puts new values in powerLevels.
- */
-//void setPowerLevels(int value1, int value2, int value3, int value4, int value5, int value6, int value7, int value8, int value9, int value10);
-
-/**
- * This function puts new values in distances.
- */
-//void setDistances(int value1, int value2, int value3, int value4, int value5, int value6, int value7, int value8, int value9, int value10);
-
-/*
- * These functions make it more intuitive to edit the distances and powerLevels arrays for use in the go() function.
+ * This function sets the speeds and distances for the robot to move in the next go() call.
+ * 
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @since 2014-12-29
+ *
+ * @param forward[in]
+ *		distance in encoder counts to travel vertically - positive is forward, negative backward
+ * @param right[in]
+ *		distance in encoder counts to travel horizontally - positive is right, negative left
+ * @param spin[in]
+ *		distance in encoder counts to rotate
  */
 void setBase(int forward, int right, int spin);
 
+/**
+ * This function sets the speed and distance for the lift to move in the next go() call.
+ * 
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @since 2014-12-29
+ *
+ * @param distance
+ * 		distance in encoder counts to raise or lower the lift - positive is up, negative down
+ */
 void setLift(int distance);
 
-//direction 1 sets the shuttle forward, -1 backward, and 0 stationary.
+/**
+ * This function sets the direction for the shuttle to move in the next go() call.
+ * 
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @since 2014-12-29
+ *
+ * @param direction[in]
+ * 		direction that the shuttle travels 
+ *		0 : stationary
+ *		1 : forward
+ *	   -1 : backwards
+ */
 void setShuttle(int direction);
 
+/**
+ * This function sets the claw to open[1] or close[-1].
+ * 
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @since 2014-12-29
+ *
+ * @param x[in]
+ * 		direction to open claw 
+ *		1: open
+ *	   -1: closed
+ */
 void setClaw(int x);
 
-/*
- * returns the largest value in an array of ints
+/**
+ * This function returns the largest absolute value in a given array of integers.
+ *
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @since 2015-1-?
+ *
+ * @param a[in]
+ *		the array for which the largest absolute value is found
+ * @return
+ *		the largest absolute value of any element in the array
  */
 int max(int a[]);
 
-/*
- * returns the largest value in an array of floats
+/**
+ * This function returns the largest absolute value in a given array of floats.
+ *
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @since 2015-1-?
+ *
+ * @param a[in]
+ *		the array for which the largest absolute value is found
+ * @return
+ *		the largest absolute value of any element in the array
  */
 float maxF(float a[]);
 
-/*
- * returns the smallest value in an array of floats
+/**
+ * This function returns the smallest absolute value in a given array of floats.
+ *
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @since 2015-2-19
+ *
+ * @param a[in]
+ *		the array for which the smallest absolute value is found
+ * @return
+ *		the smallest absolute value of any element in the array
  */
 float minF(float a[]);
 
-/*
- * Returns the average value of an array of floats
+/**
+ * This function returns the average value of an array of floats.
+ *
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @since 2015-2-19
+ *
+ * @param a[in]
+ *		the array for which the average value is found
+ * @return
+ *		the average of all elements in the array
  */
 float averageF(float a[]);
 
-/*
- * Returns the number of elements in an array of ints
+/**
+ * This function returns the number of elements in an array of ints.
+ *
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @since 2015-2-19
+ *
+ * @param a[in]
+ *		the array for which the length is found
+ * @return
+ *		the number of elements in the array
  */
 int length(int a[]);
 
-/*
- * Returns the number of elements in an array of floats
+/**
+ * This function returns the number of elements in an array of floats.
+ *
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @since 2015-2-19
+ *
+ * @param a[in]
+ *		the array for which the length is found
+ * @return
+ *		the number of elements in the array
  */
 float lengthF(float a[]);
 
-/*
- * Finds the average ratio, among all the drive motors excluding index, of distance travelled to destination distance
+/**
+ * This function finds the average ratio, among all the drive motors excluding index, of distance travelled to destination distance.
+ *		In other words, the proportion of the current move which the robot has completed.
+ *
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @since 2015-1-?
+ *
+ * @param index[in]
+ *		the one motor to exclude from the calculation
+ * @return
+ *		the proportion of the current move which has been completed
  */
 float prop(int index);
 
 /**
- * Returns the sign of an int. Returns 1 for a positive, -1 for a negative, and 0 for a zero x.
+ * The following functions are responsible for all autonomous and programming skills strategies.
  */
-//int sign(int x);
 
 /**
- * These functions are responsible for all autonomous and programming skills strategies.
+ * The robot knocks the preload cube onto the red skyrise base and places two skyrise sections on the base.
+ *		Scores 12 points when executed perfectly.
+ *
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @author Faith Bosher
+ * @since 2015-1-?
  */
-void auton0(void);
-void auton1(void);
-void auton2(void);
-void auton3(void);
-void auton4(void);
-void auton5(void);
-void auton6(void);
-void auton7(void);
+void autonRedSkyrise(void);
 
+/**
+ * The robot knocks the preload cube onto the blue skyrise base and places two skyrise sections on the base.
+ *		Scores 12 points when executed perfectly.
+ *
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @author Faith Bosher
+ * @since 2015-1-?
+ */
+void autonBlueSkyrise(void);
+
+/**
+ * The robot lifts the preload cube onto the low post adjacent to the starting tile and backs away.
+ *		Scores 3 points when executed perfectly.
+ *
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @since 2015-1-?
+ */
+void autonRedPost(void);
+
+/**
+ * The robot lifts the preload cube onto the low post adjacent to the starting tile and backs away.
+ *		Scores 3 points when executed perfectly.
+ *
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @since 2015-1-?
+ */
+void autonBluePost(void);
+
+/**
+ * The robot knocks the preload cube onto the blue skyrise base and places five skyrise sections on the base.
+ *		Scores 24 points when executed perfectly.
+ *
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @since 2015-2-19
+ */
+void programmingSkills(void);
+
+/**
+ *
+ */
+void autonBackUp(void);
+
+/**
+ * This function serves to test the autonomous code.
+ *
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @since ?
+ */
 void testAuton(void);
 
+/**
+ * Makes sure that a value is within a specified range. If not, returns the closest value within the range.
+ *
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @since ?
+ *
+ * @param x[in]
+ *		the value to be checked
+ * @param lBound[in]
+ *		the lowest allowable value to return
+ * @param uBound[in]
+ *		the highest allowable value to return
+ * @return
+ *		the closest value to x which liew within the range
+ */
 int cap(int x, int lBound, int uBound);
+
+/**
+ * This function takes an input from the joystick and makes it zero if it is within the dead zone.
+ *
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @author Liam Bohl <liambohl@gmail.com>
+ * @since 2015-1-?
+ *
+ * @param value[in]
+ *		the value taken from the joystick
+ * @return
+ *		the value adjusted to account for the dead zone
+ */
 int deadZoneAdjust(int value);
+
+/**
+ * This function returns the sign (positive or negative) of and integer.
+ *
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @since 2015-1-?
+ *
+ * @param x[in]
+ *		the value for which the sign is to be taken
+ * @return
+ *		1 or -1, depending on the sign of x
+ */
 int signOf(int x);
 
+/**
+ * The following four functions use the inputs determined in updateInput() to set the robot's various motors.
+ */
+
+/**
+ * This function sets the power levels of the base motors
+ *
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @since 2015-2-?
+ *
+ * @param spin[in]
+ *		speed to turn clockwise (positive) or counter-clockwise (negative)
+ * @param vertical[in]
+ *		speed to move forward (positive) or backward (negative)
+ * @param horizontal[in]
+ *		speed to move right (positive) or left (negative)
+ */
 void setBaseMotors(int spin, int vertical, int horizontal);
+
+/**
+ * This function sets the power levels of the lift motors
+ *
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @since 2015-2-?
+ *
+ * @param liftSpeed
+ *		speed to move lift up (positive) or down (negative)
+ */
 void setLiftMotors(int liftSpeed);
+
+/**
+ * This function sets the power level of the shuttle motor
+ *
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @since 2015-2-?
+ *
+ * @param in[in]
+ *		is the "in" button pressed?
+ * @param out[in]
+ *		is the "out" button pressed?
+ * @param back[in]
+ *		is the back bumper switch depressed?
+ * @param front[in]
+ *		is the front bumper switch depressed?
+ */
 void setShuttleMotors(bool in, bool out, bool back, bool front);
+
+/**
+ * This function sets the position of the claw motor
+ *
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @since 2015-2-?
+ *
+ * @param buttonPressed[in]
+ *		is the claw button pressed?
+ */
 void setClawMotors(bool buttonPressed);
 
+/**
+ * This function takes input from one joystick channel and adjusts it to give more precise control of speed.
+ *
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @since 2015-2-?
+ * 
+ * @param input[in]
+ *		the value of the joystick channel to be adjusted
+ * @return
+ *		the adjusted value
+ */
 int joystickAcceleration(int input);
 
-/*
+/**
  * Finds the average ratio of distance travelled to destination distance for all base drive motors.
+ *
+ * @author Michel Momeyer <strihawk1213@gmail.com>
+ * @since 2015-1-?
+ *
+ * @return
+ *		the proportion of the current autonomous move which has been completed
  */
 float getAverageComplete(void);
 

@@ -200,8 +200,7 @@ msg_t vexAutonomous(void *arg)
     vexTaskRegister("auton");
 
     //Run the auton function
-    auton1();
-
+    programmingSkills();
     return (msg_t)0;
 }
 
@@ -292,12 +291,12 @@ void updateInput(void)
 
     //Test Auton Functions
     
-    if(vexControllerGet(Btn7R)) auton0();   //Red skyrise
-    if(vexControllerGet(Btn7L)) auton1();   //Blue skyrise
-    if(vexControllerGet(Btn8R)) auton2();   //Red post
-    if(vexControllerGet(Btn8L)) auton3();   //Blue post
+    if(vexControllerGet(Btn7R)) autonRedSkyrise();
+    if(vexControllerGet(Btn7L)) autonBlueSkyrise();
+    if(vexControllerGet(Btn8R)) autonRedPost();
+    if(vexControllerGet(Btn8L)) autonBluePost();
     
-    if(vexControllerGet(Btn7U)) auton4();
+    if(vexControllerGet(Btn7U)) programmingSkills();
 }
 
 /*

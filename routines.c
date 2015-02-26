@@ -159,9 +159,9 @@ void auton0()
 }
 */
 
-//
+//Red skyrise auton
 //Start in red skyrise square, facing auto-loader
-void auton0()
+void autonRedSkyrise()
 {
 	//Nudge preload
 	setBase(12,-12,0);
@@ -184,7 +184,7 @@ void auton0()
 	vexSleep(300);
 
 	//Turn counter-clockwise to land over base
-	setBase(0,0,-280);
+	setBase(0,0,-260);
 	go();
 	vexSleep(300);
 
@@ -202,7 +202,7 @@ void auton0()
 	//	V	V	V
 	
 	//Turn back around and retract shuttle
-	setBase(0,0,280);
+	setBase(0,0,260);
 	setShuttle(-1);
 	go();
 	vexSleep(300);
@@ -217,7 +217,7 @@ void auton0()
 	vexSleep(300);
 
 	//Lift peg out of auto-loader
-	setLift(1000);
+	setLift(1200);
 	go();
 	vexSleep(300);
 
@@ -228,7 +228,7 @@ void auton0()
 	vexSleep(300);
 
 	//Lower peg
-	setLift(-800);
+	setLift(-1000);
 	go();
 	vexSleep(300);
 
@@ -245,9 +245,9 @@ void auton0()
 	go();
 }
 
-//
+//Blue skyrise auton
 //Start in blue skyrise square, facing auto-loader
-void auton1()
+void autonBlueSkyrise()
 {
 	//Nudge preload
 	setBase(12,12,0);
@@ -270,7 +270,7 @@ void auton1()
 	vexSleep(300);
 
 	//Turn clockwise to land over base
-	setBase(0,0,280);
+	setBase(0,0,260);
 	go();
 	vexSleep(300);
 
@@ -288,7 +288,7 @@ void auton1()
 	//	V	V	V
 	
 	//Turn back around and retract shuttle
-	setBase(0,0,-280);
+	setBase(0,0,-260);
 	setShuttle(-1);
 	go();
 	vexSleep(300);
@@ -308,7 +308,7 @@ void auton1()
 	vexSleep(300);
 
 	//Turn clockwise to land over base, lift peg a bit higher?
-	setBase(0,0,265);
+	setBase(0,0,240);
 	//setLift(500);
 	go();
 	vexSleep(300);
@@ -336,8 +336,9 @@ void auton1()
 
 }
 
-//Start in red low post square facing between short post and skyrise
-void auton2()
+//Red low post auton
+//Start in red low post square facing, between short post and skyrise
+void autonRedPost()
 {
 	//Lift preload cube to top of low post
 	setLift(2000);
@@ -410,8 +411,9 @@ void auton2()
 	go();
 }
 
-//Start in blue low post square facing between short post and skyrise
-void auton3()
+//Blue low post auton
+//Start in blue low post square, facing between short post and skyrise
+void autonBluePost()
 {
 	setLift(2000);
 	go();
@@ -433,10 +435,11 @@ void auton3()
 	go();
 }
 
-//Start in ___ square, facing ___
-void auton4()
+//Programming skills challenge routine
+//Start in red skyrise square, facing auto-loader
+void programmingSkills()
 {
-	auton0();
+	autonRedSkyrise();
 
 	//Turn back for 3rd peg
 	setBase(0,0,280);
@@ -454,13 +457,13 @@ void auton4()
 	vexSleep(300);
 
 	//Lift peg out of auto-loader
-	setLift(1500);
+	setLift(1000);
 	go();
 	vexSleep(300);
 
-	//Turn counter-clockwise to land over base, lift peg a bit higher?
-	setBase(0,0,-265);
-	//setLift(500);
+	//Turn counter-clockwise to land over base, lift peg a bit higher
+	setBase(0,0,-280);
+	setLift(500);
 	go();
 	vexSleep(300);
 
@@ -481,7 +484,7 @@ void auton4()
 
 	//Turn back and lower for new peg
 	setBase(0,0,280);
-	setLift(-500);
+	setLift(-300);
 	setShuttle(-1);
 	go();
 	vexSleep(300);
@@ -501,7 +504,7 @@ void auton4()
 	vexSleep(300);
 
 	//Turn counter-clockwise to land over base, lift peg a bit higher
-	setBase(0,0,-265);
+	setBase(0,0,-280);
 	setLift(500);
 	go();
 	vexSleep(300);
@@ -523,7 +526,7 @@ void auton4()
 
 	//Turn back and lower for new peg
 	setBase(0,0,280);
-	setLift(-1500);
+	setLift(-1100);
 	setShuttle(-1);
 	go();
 	vexSleep(300);
@@ -538,13 +541,18 @@ void auton4()
 	vexSleep(300);
 
 	//Lift peg out of auto-loader
-	setLift(1000);
+	setLift(2300);
 	go();
 	vexSleep(300);
 
 	//Turn counter-clockwise to land over base, lift peg a bit higher
-	setBase(0,0,-265);
-	setLift(2000);
+	setBase(0,0,-300);
+	setLift(500);
+	go();
+	vexSleep(800);
+
+	//Back up to adjust
+	setBase(-15,0,0);
 	go();
 	vexSleep(300);
 
@@ -562,20 +570,9 @@ void auton4()
 	go();
 }
 
-//Start in ___ square, facing ___
-void auton5()
+//Back up to drop pre-load
+void autonBackUp()
 {
-	
-}
-
-//Start in ___ square, facing ___
-void auton6()
-{
-	
-}
-
-//Start in ___ square, facing ___
-void auton7()
-{
-	
+	setBase(-200,0,0);
+	go();
 }
