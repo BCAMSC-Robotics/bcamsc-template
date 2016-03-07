@@ -1,3 +1,6 @@
 [submodule "convex"]
 	path = convex
 	url = https://github.com/jpearman/convex.git
+[submodule "bcamsc-lib"]
+	path = bcamsc-lib
+	url = https://github.com/BCAMSC-Robotics/bcamsc-lib.git

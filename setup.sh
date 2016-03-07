@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 # Created on December 22, 2014 by Ethan Ruffing
 
 git submodule update --init --recursive
