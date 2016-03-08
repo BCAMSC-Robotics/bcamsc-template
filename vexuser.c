@@ -1,21 +1,7 @@
-/*******************************************************************************
- * @mainpage
- * This is the program for the BCAMSC Robotics Team 2581B 2014 competition
- * robot.
- *
- * @details
- * This program is the primary file for the BCAMSC Robotics Team 2581B program
- * for the 2014-2015 school year.
- *
- * This program is based on a template by James Pearman in his "C on Vex"
- * library, V 1.00.
- *
- * @author James Pearman
- * @author Michel Momeyer <strihawk1213@gmail.com>
- * @author Ethan Ruffing <ruffinge@mail.gvsu.edu>
- *
- * @since 2014-12-22
- ******************************************************************************/
+/**
+ * This file contains the definitions of functions called by the VEX field
+ * control system.
+ */
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
@@ -24,8 +10,11 @@
 #include "hal.h"        // hardware abstraction layer header
 #include "vex.h"        // vex library header
 #include "vexuser.h"    // function declarations
-#include "apollo.h"     // the library that includes the apollo debug window in screen
 #include "smartmotor.h" // the library for smart motors
+
+#if DEBUG
+#include "apollo.h"     // the library that includes the apollo debug window in screen
+#endif /* DEBUG */
 
 // Digi IO configuration
 static vexDigiCfg dConfig[kVexDigital_Num] = { { kVexDigital_1,

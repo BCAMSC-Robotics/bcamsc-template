@@ -11,5 +11,5 @@ CONVEX_OPT  = yes
 VEXUSERSRC = vexuser.c bcamsc-lib/libbcamsc/array_utils.c
 
 # Uncomment and add/modify user include files
-VEXUSERINC = vexuser.h bcamsc-lib/libbcamsc/array_utils.h
+VEXUSERINC = . bcamsc-lib
 

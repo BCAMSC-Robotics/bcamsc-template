@@ -1,15 +1,18 @@
-#ifndef VEXUSER_H
-#define VEXUSER_H
+/**
+ * @file vexuser.h
+ *
+ * This file contains the functions called by the VEX field control system.
+ */
 
-/*-----------------------------------------------------------------------------*/
-/** @brief      User setup                                                     */
-/*-----------------------------------------------------------------------------*/
+#ifndef VEXUSER_H_
+#define VEXUSER_H_
+
 /**
  * @brief      User setup
  * @details
  *  The digital and motor ports can (should) be configured here.
  */
-void vexUserSetup();
+void vexUserSetup(void);
 
 /**
  * @brief      User initialize
@@ -18,7 +21,7 @@ void vexUserSetup();
  *  been established with the master processor.
  *  Start other tasks and initialize user variables here
  */
-void vexUserInit();
+void vexUserInit(void);
 
 /**
  * @brief      Autonomous
@@ -34,4 +37,4 @@ msg_t vexAutonomous(void *arg);
  */
 msg_t vexOperator(void *arg);
 
-#endif // VEXUSER_H
+#endif /* VEXUSER_H_ */

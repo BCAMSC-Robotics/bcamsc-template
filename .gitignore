@@ -27,10 +27,13 @@
 *.i*86
 *.x86_64
 *.hex
+bin/
+.dep/
 
 # Debug files
 *.dSYM/
 
 # Documentation output
 doc/
+.*.html
 
